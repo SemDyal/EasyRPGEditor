@@ -196,7 +196,7 @@ void EventCommandBaseWidget::connectParameterHandler(QSpinBox *spin, int index, 
 void EventCommandBaseWidget::connectParameterHandler(QCheckBox* check, int index, bool set_value) {
 	resizeCommandList(index);
 
-	connect(check, qOverload<int>(&QCheckBox::stateChanged), this,
+    connect(check, &QCheckBox::checkStateChanged, this,
 			[=] (int new_value) {
 		m_cmd->parameters[index] = new_value;
 		emit parameterChanged(index, new_value);

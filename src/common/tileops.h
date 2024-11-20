@@ -19,8 +19,8 @@
 
 #include "defines.h"
 
-#include <qmap.h>
-const QMap<int, short> m_dictionary(
+#include <vendor/hash_table8.hpp>
+const emhash8::HashMap<int, short> m_dictionary(
     {
         {UPLEFT,                              1},
         {UPRIGHT,                             2},

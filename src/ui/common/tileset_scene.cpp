@@ -45,11 +45,18 @@ void TilesetScene::draw_overview(RpgPainter::TileOverviewMode mode) {
         painter.drawPixmap(QRect(0, 0, 16, 16), m_chipset.copy(QRect(0, 0, 16, 16)));
         painter.drawPixmap(QRect(16, 0, 16, 16), m_chipset.copy(QRect(48, 0, 16, 16)));
         painter.drawPixmap(QRect(32, 0, 16, 16), m_chipset.copy(QRect(0, 64, 16, 16)));
-        for (int i = 48; i == 80; i += 16){
-            painter.drawPixmap(QRect(i, 0, 16, 16), m_chipset.copy(QRect(i, 64, 16, 16)));
-        }
-        for (int i = 0; i == 12; i++){
-            painter.drawPixmap(QRect(i%6, 16+i/6, 16, 16), m_chipset.copy(QRect(i > 4 ? (i%2)*48 : 96 + (i%2)*48, i > 4 ? 128 + (i/2)*64 : (i/2)*64 - 128, 16, 16)));
+        painter.drawPixmap(QRect(48, 0, 16, 16), m_chipset.copy(QRect(48, 64, 16, 16)));
+        painter.drawPixmap(QRect(64, 0, 16, 16), m_chipset.copy(QRect(64, 64, 16, 16)));
+        painter.drawPixmap(QRect(80, 0, 16, 16), m_chipset.copy(QRect(80, 64, 16, 16)));
+        for (int i = 0; i < 12; i++) {
+            painter.drawPixmap(
+                QRect((i%6)*16, 16+(i/6)*16, 16, 16),
+                m_chipset.copy(
+                    QRect(i < 4 ? (i%2)*48 : 96 + (i%2)*48,
+                          i < 4 ? 128 + (i/2)*64 : (i/2)*64 - 128,
+                          16, 16)
+                )
+            );
         }
         painter.drawPixmap(QRect(0, 48, 96, 256), m_chipset.copy(QRect(192, 0, 96, 256)));
         painter.drawPixmap(QRect(0, 304, 96, 128), m_chipset.copy(QRect(288, 0, 96, 128)));

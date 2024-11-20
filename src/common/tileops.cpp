@@ -57,11 +57,11 @@ short TileOps::translate(int terrain_id, int _code, int _scode)
     if (terrain_id < 0)
         return 0x7FFF;
     if (isWater(terrain_id))
-        return (static_cast<short>(terrain_id)*1000+m_dictionary[_code]+m_dictionary[_scode]*50);
+        return (static_cast<short>(terrain_id)*1000+m_dictionary.get_or_return_default(_code)+m_dictionary.get_or_return_default(_scode)*50);
     if (isAnimation(terrain_id))
-        return (3000+(static_cast<short>(terrain_id)-3)*50+m_dictionary[_code]);
+        return (3000+(static_cast<short>(terrain_id)-3)*50+m_dictionary.get_or_return_default(_code));
     if (isDblock(terrain_id))
-        return (4000+(static_cast<short>(terrain_id)-6)*50+m_dictionary[_code]);
+        return (4000+(static_cast<short>(terrain_id)-6)*50+m_dictionary.get_or_return_default(_code));
     if (isEblock(terrain_id))
         return (5000+static_cast<short>(terrain_id)-18);
     if (isFblock(terrain_id))
