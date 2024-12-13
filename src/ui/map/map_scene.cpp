@@ -233,11 +233,11 @@ void MapScene::setEventData(int id, const lcf::rpg::Event &data)
     redrawLayer(Core::UPPER);
 }
 
-QMap<int, lcf::rpg::Event*> *MapScene::mapEvents()
+emhash8::HashMap<int, lcf::rpg::Event*> *MapScene::mapEvents()
 {
-	QMap<int, lcf::rpg::Event*> *events = new QMap<int, lcf::rpg::Event*>();
+    emhash8::HashMap<int, lcf::rpg::Event*> *events = new emhash8::HashMap<int, lcf::rpg::Event*>();
 	for (unsigned int i = 0; i < m_map->events.size(); i++)
-		events->insert(m_map->events[i].ID, &m_map->events[i]);
+        events->try_set(m_map->events[i].ID, &m_map->events[i]);
 	return events;
 }
 
@@ -428,6 +428,7 @@ void MapScene::on_actionNewEvent()
     event.y = cur_y;
     lcf::rpg::EventPage page;
     page.ID = 1;
+    page.character_index = core().selection(0, 0) - 10000;
     event.pages.push_back(page);
 
     int result = EventDialog::edit(m_view, event, m_project, this);
@@ -551,13 +552,14 @@ void MapScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         if (core().tool() == Core::ZOOM && static_cast<double>(m_scale) > 0.125)
             setScale(m_scale/2);
         else if (sceneRect().contains(event->scenePos()) && core().layer() == Core::EVENT)
-		{
-			m_eventMenu->actions()[2]->setEnabled(!getEventAt(cur_x, cur_y));
-			m_eventMenu->actions()[3]->setEnabled(getEventAt(cur_x, cur_y));
-			m_eventMenu->actions()[4]->setEnabled(getEventAt(cur_x, cur_y));
-			m_eventMenu->actions()[5]->setEnabled(getEventAt(cur_x, cur_y));
-			m_eventMenu->actions()[6]->setEnabled(!getEventAt(cur_x, cur_y) && event_clipboard_set);
-			m_eventMenu->actions()[7]->setEnabled(getEventAt(cur_x, cur_y));
+        {
+            lcf::rpg::Event *selection = getEventAt(cur_x, cur_y);
+            m_eventMenu->actions()[2]->setEnabled(!selection);
+            m_eventMenu->actions()[3]->setEnabled(selection);
+            m_eventMenu->actions()[4]->setEnabled(selection);
+            m_eventMenu->actions()[5]->setEnabled(selection);
+            m_eventMenu->actions()[6]->setEnabled(!selection && event_clipboard_set);
+            m_eventMenu->actions()[7]->setEnabled(selection);
 
 			lst_x = cur_x;
 			lst_y = cur_y;
@@ -617,29 +619,33 @@ void MapScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void MapScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-	if (!sceneRect().contains(event->scenePos())) {
-		cur_x = -1;
-		cur_y = -1;
-		return;
-	}
-	if (cur_x == static_cast<int>(event->scenePos().x() / s_tileSize) && cur_y == static_cast<int>(event->scenePos().y() / s_tileSize))
-		return;
-	cur_x = std::max(0, std::min(m_map->width - 1, static_cast<int>(event->scenePos().x() / s_tileSize)));
-	cur_y = std::max(0, std::min(m_map->height - 1, static_cast<int>(event->scenePos().y() / s_tileSize)));
-	if (m_drawing)
+    int next_x = std::max(0, std::min(m_map->width - 1, static_cast<int>(event->scenePos().x() / s_tileSize)));
+    int next_y = std::max(0, std::min(m_map->height - 1, static_cast<int>(event->scenePos().y() / s_tileSize)));
+    if (m_drawing)
 	{
 		switch (core().tool())
 		{
 		case (Core::PENCIL):
-			drawPen();
-			break;
+            if (cur_x == static_cast<int>(event->scenePos().x() / s_tileSize) && cur_y == static_cast<int>(event->scenePos().y() / s_tileSize))
+                return;
+            if (cur_x != -1 && cur_y != -1){
+                drawPen(next_x, next_y);
+            }
+            break;
 		case (Core::RECTANGLE):
-			drawRect();
+            drawRect(next_x, next_y);
 			break;
 		default:
 			break;
 		}
 	}
+    cur_x = next_x;
+    cur_y = next_y;
+    if (!sceneRect().contains(event->scenePos())) {
+        cur_x = -1;
+        cur_y = -1;
+        return;
+    }
 
 	// Update status bar
 	QMainWindow* mw = qobject_cast<QMainWindow*>(parent());
@@ -660,6 +666,7 @@ void MapScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 	}
 
 	mw->statusBar()->showMessage(status_msg);
+
 }
 
 void MapScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
@@ -667,6 +674,7 @@ void MapScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 	if (m_cancelled && !event->buttons())
 	{
 		m_cancelled = false;
+        m_drawing = false;
 		return;
 	}
 	if (m_drawing && !m_cancelled)
@@ -772,8 +780,8 @@ void MapScene::updateArea(int x1, int y1, int x2, int y2)
 	if (y2 >= m_map->height)
 		y2 = m_map->height - 1;
 
-	for (int x = x1; x <= x2; x++)
-		for (int y = y1; y <= y2; y++)
+    for (int x = x1; x <= x2; x++)
+        for (int y = y1; y <= y2; y++)
 		{
 			if (core().layer() == Core::LOWER)
 			{
@@ -805,13 +813,17 @@ void MapScene::redrawArea(Core::Layer layer, int x1, int y1, int x2, int y2)
         }
     if (layer == Core::UPPER)
     {
+        m_painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
         for (unsigned int i = 0; i < m_map->events.size(); i++)
         {
-            QRect rect((m_map->events[i].x-x1)* s_tileSize,
-                       (m_map->events[i].y-y1)* s_tileSize,
-                       s_tileSize,
-                       s_tileSize);
-            //m_painter.renderEvent(m_map->events[i], rect);
+            if (x1 <= m_map->events[i].x && m_map->events[i].x <= x2
+                && y1 <= m_map->events[i].y && m_map->events[i].y <= y2){
+                QRect rect((m_map->events[i].x-offset_x)* s_tileSize,
+                           (m_map->events[i].y-offset_y)* s_tileSize,
+                           s_tileSize,
+                           s_tileSize);
+                m_painter.renderEvent(m_map->events[i], rect);
+            }
         }
     }
     m_painter.endPainting();
@@ -870,20 +882,36 @@ void MapScene::redrawLayer(Core::Layer layer)
 	}
 }
 
-void MapScene::drawPen()
+void MapScene::drawPen() {
+    drawPen(cur_x, cur_y);
+}
+
+void MapScene::drawPen(int next_x, int next_y)
 {
-	for (int x = cur_x; x < cur_x + core().selWidth(); x++)
-		for (int y = cur_y; y < cur_y + core().selHeight(); y++)
+    for (int x = next_x; x < next_x + core().selWidth(); x++)
+        for (int y = next_y; y < next_y + core().selHeight(); y++)
 		{
 			if (core().layer() == Core::LOWER)
 				m_lower[static_cast<size_t>(_index(x,y))] = core().selection(x-fst_x,y-fst_y);
 			else if (core().layer() == Core::UPPER)
 				m_upper[static_cast<size_t>(_index(x,y))] = core().selection(x-fst_x,y-fst_y);
 		}
-	updateArea(cur_x-1,cur_y-1,cur_x+core().selWidth()+1,cur_y+core().selHeight()+1);
+    updateArea(next_x-1,next_y-1,next_x+core().selWidth()+1,next_y+core().selHeight()+1);
+    if (next_x - cur_x != 0 || next_y - cur_y != 0) {
+        // TODO: replace this with a better line algorithm
+        if (next_x - cur_x > 0) {next_x--;}
+        else if (next_x - cur_x < 0) {next_x++;}
+        if (next_y - cur_y > 0) {next_y--;}
+        else if (next_y - cur_y < 0) {next_y++;}
+        drawPen(next_x, next_y);
+    }
 }
 
-void MapScene::drawRect()
+void MapScene::drawRect() {
+    drawRect(cur_x, cur_y);
+}
+
+void MapScene::drawRect(int next_x, int next_y)
 {
 	switch (core().layer())
 	{
@@ -897,10 +925,10 @@ void MapScene::drawRect()
 		break;
 	}
 
-	int x1 = fst_x > cur_x ? cur_x : fst_x;
-	int x2 = fst_x > cur_x ? fst_x : cur_x;
-	int y1 = fst_y > cur_y ? cur_y : fst_y;
-	int y2 = fst_y > cur_y ? fst_y : cur_y;
+    int x1 = fst_x > next_x ? next_x : fst_x;
+    int x2 = fst_x > next_x ? fst_x : next_x;
+    int y1 = fst_y > next_y ? next_y : fst_y;
+    int y2 = fst_y > next_y ? fst_y : next_y;
 	for (int x = x1; x <= x2; x++)
 		for (int y = y1; y <= y2; y++)
 		{
@@ -910,6 +938,10 @@ void MapScene::drawRect()
 				m_upper[static_cast<size_t>(_index(x,y))] = core().selection(x-fst_x,y-fst_y);
 		}
     // FIXME: without a redrawLayer it doesn't clean up after itself properly
+    x1 = fst_x > cur_x ? cur_x : fst_x;
+    x2 = fst_x > cur_x ? fst_x : cur_x;
+    y1 = fst_y > cur_y ? cur_y : fst_y;
+    y2 = fst_y > cur_y ? fst_y : cur_y;
     updateArea(x1-2, y1-2, x2+2, y2+2);
 }
 
@@ -1168,7 +1200,7 @@ lcf::rpg::Event *MapScene::currentMapEvent(int eventID)
 {
     lcf::rpg::Event *event = nullptr;
     if (m_currentMapEvents)
-        event = m_currentMapEvents->value(eventID);
+        event = m_currentMapEvents->get_or_return_default(eventID);
     if (!event)
     {
         event = new lcf::rpg::Event();
@@ -1177,7 +1209,7 @@ lcf::rpg::Event *MapScene::currentMapEvent(int eventID)
     return event;
 }
 
-void MapScene::setCurrentMapEvents(QMap<int, lcf::rpg::Event *> *events)
+void MapScene::setCurrentMapEvents(emhash8::HashMap<int, lcf::rpg::Event *> *events)
 {
     m_currentMapEvents = events;
 }

@@ -54,15 +54,16 @@ public:
     lcf::rpg::Map*map() const;
 	void setLayerData(Core::Layer layer, std::vector<short> data);
 	void setEventData(int id, const lcf::rpg::Event &data);
-	QMap<int, lcf::rpg::Event *> *mapEvents();
+    emhash8::HashMap<int, lcf::rpg::Event *> *mapEvents();
 	void editMapProperties(QTreeWidgetItem *item);
 
     lcf::rpg::Event *currentMapEvent(int eventID);
     void loadEvents();
-    void setCurrentMapEvents(QMap<int, lcf::rpg::Event *> *events);
+    void setCurrentMapEvents(emhash8::HashMap<int, lcf::rpg::Event *> *events);
     void setTileset(int index);
     QSize setPanorama(QString name);
     inline std::shared_ptr<emhash8::HashMap<short, QPixmap>> &sharePainterTiles() { return m_painter.sharePainterTiles(); };
+
 signals:
 
 	void mapChanged();
@@ -126,8 +127,10 @@ private:
 	void updateArea(int x1, int y1, int x2, int y2);
     void redrawArea(Core::Layer layer, int x1, int y1, int x2, int y2);
 	void redrawLayer(Core::Layer layer);
-	void drawPen();
+    void drawPen();
+    void drawPen(int next_x, int next_y);
 	void drawRect();
+    void drawRect(int next_x, int next_y);
 	void drawFill(int terrain_id, int x, int y);
 	short bind(int x, int y);
 	lcf::rpg::Event* getEventAt(int x, int y);
@@ -151,8 +154,8 @@ private:
 	float m_scale;
 	bool m_init = false;
 	int s_tileSize;
-	int cur_x;
-	int cur_y;
+    int cur_x = -1;
+    int cur_y = -1;
 	int fst_x;
 	int fst_y;
 	int lst_x;
@@ -168,7 +171,7 @@ private:
 	QList<QGraphicsItem*> grid_lines;
     RpgPainter m_painter;
     QPixmap m_panoramaPixmap;
-    QMap<int, lcf::rpg::Event*> *m_currentMapEvents;
+    emhash8::HashMap<int, lcf::rpg::Event*> *m_currentMapEvents;
     int m_lastHScrollPos;
     int m_lastVScrollPos;
 };
