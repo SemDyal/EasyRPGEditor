@@ -36,14 +36,16 @@
 #include "undo_event.h"
 #include <lcf/lmu/reader.h>
 #include <lcf/lmt/reader.h>
+#include <ui/common/palette_scene.h>
 
-MapScene::MapScene(ProjectData& project, int id, QGraphicsView *view, QObject *parent) :
+MapScene::MapScene(ProjectData& project, int id, QGraphicsView *view, PaletteScene *palette, QObject *parent) :
 	QGraphicsScene(parent), m_project(project)
 {
 	m_init = false;
 	m_view = view;
-	m_view->setMouseTracking(true);
-	m_undoStack = new QUndoStack(this);
+    m_palette = palette;
+    m_view->setMouseTracking(true);
+    m_undoStack = new QUndoStack(this);
 	m_selectionTile = new QGraphicsRectItem(QRectF(QRect(0,32,32,32)));
 	m_selecting = false;
 	const auto& treeMap = project.treeMap();
@@ -428,7 +430,7 @@ void MapScene::on_actionNewEvent()
     event.y = cur_y;
     lcf::rpg::EventPage page;
     page.ID = 1;
-    page.character_index = core().selection(0, 0) - 10000;
+    page.character_index = m_palette->selection(0, 0) - 10000;
     event.pages.push_back(page);
 
     int result = EventDialog::edit(m_view, event, m_project, this);
@@ -628,7 +630,7 @@ void MapScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 		case (Core::PENCIL):
             if (cur_x == static_cast<int>(event->scenePos().x() / s_tileSize) && cur_y == static_cast<int>(event->scenePos().y() / s_tileSize))
                 return;
-            if (cur_x != -1 && cur_y != -1){
+            if (in_bounds){
                 drawPen(next_x, next_y);
             }
             break;
@@ -641,11 +643,7 @@ void MapScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 	}
     cur_x = next_x;
     cur_y = next_y;
-    if (!sceneRect().contains(event->scenePos())) {
-        cur_x = -1;
-        cur_y = -1;
-        return;
-    }
+    in_bounds = sceneRect().contains(event->scenePos());
 
 	// Update status bar
 	QMainWindow* mw = qobject_cast<QMainWindow*>(parent());
@@ -715,6 +713,18 @@ void MapScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 	}
 }
 
+void MapScene::keyPressEvent(QKeyEvent *event) {
+    if (event->key() == Qt::Key_Shift) {
+        m_shift = true;
+    }
+}
+
+void MapScene::keyReleaseEvent(QKeyEvent *event) {
+    if (event->key() == Qt::Key_Shift) {
+        m_shift = false;
+    }
+}
+
 int MapScene::_x(int index)
 {
 	return (index%m_map->width);
@@ -776,20 +786,22 @@ void MapScene::updateArea(int x1, int y1, int x2, int y2)
 	if (y1 < 0)
 		y1 = 0;
 	if (x2 >= m_map->width)
-		x2 = m_map->width - 1;
+        x2 = m_map->width;
 	if (y2 >= m_map->height)
-		y2 = m_map->height - 1;
+        y2 = m_map->height;
 
-    for (int x = x1; x <= x2; x++)
-        for (int y = y1; y <= y2; y++)
-		{
-			if (core().layer() == Core::LOWER)
-			{
+    // TODO: shift mode breaks on autotiles
+    if (core().layer() == Core::LOWER && !m_shift) {
+        for (int x = x1; x < x2; x++) {
+            for (int y = y1; y < y2; y++) {
                 if (!TileOps::isEblock(TileOps::translate(m_lower[static_cast<size_t>(_index(x, y))])))
-					m_lower[static_cast<size_t>(_index(x,y))] = bind(x, y);
-			}
+                    m_lower[static_cast<size_t>(_index(x,y))] = bind(x, y);
+            }
 
-		}
+        }
+    }
+
+
     redrawArea(core().layer(), x1, y1, x2, y2);
 }
 
@@ -800,8 +812,8 @@ void MapScene::redrawArea(Core::Layer layer, int x1, int y1, int x2, int y2)
     int offset_y = m_view->verticalScrollBar()->value() / s_tileSize;
     m_painter.beginPainting(pix);
     m_painter.setCompositionMode(QPainter::CompositionMode_Source);
-    for (int x = x1; x <= x2; x++)
-        for (int y = y1; y <= y2; y++)
+    for (int x = x1; x < x2; x++)
+        for (int y = y1; y < y2; y++)
         {
             if (x >= m_map->width || y >= m_map->height)
                 continue;
@@ -816,8 +828,8 @@ void MapScene::redrawArea(Core::Layer layer, int x1, int y1, int x2, int y2)
         m_painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
         for (unsigned int i = 0; i < m_map->events.size(); i++)
         {
-            if (x1 <= m_map->events[i].x && m_map->events[i].x <= x2
-                && y1 <= m_map->events[i].y && m_map->events[i].y <= y2){
+            if (x1 <= m_map->events[i].x && m_map->events[i].x < x2
+                && y1 <= m_map->events[i].y && m_map->events[i].y < y2){
                 QRect rect((m_map->events[i].x-offset_x)* s_tileSize,
                            (m_map->events[i].y-offset_y)* s_tileSize,
                            s_tileSize,
@@ -888,15 +900,15 @@ void MapScene::drawPen() {
 
 void MapScene::drawPen(int next_x, int next_y)
 {
-    for (int x = next_x; x < next_x + core().selWidth(); x++)
-        for (int y = next_y; y < next_y + core().selHeight(); y++)
+    for (int x = next_x; x < next_x + m_palette->selWidth(); x++)
+        for (int y = next_y; y < next_y + m_palette->selHeight(); y++)
 		{
 			if (core().layer() == Core::LOWER)
-				m_lower[static_cast<size_t>(_index(x,y))] = core().selection(x-fst_x,y-fst_y);
+                m_lower[static_cast<size_t>(_index(x,y))] = m_palette->selection(x-fst_x,y-fst_y);
 			else if (core().layer() == Core::UPPER)
-				m_upper[static_cast<size_t>(_index(x,y))] = core().selection(x-fst_x,y-fst_y);
+                m_upper[static_cast<size_t>(_index(x,y))] = m_palette->selection(x-fst_x,y-fst_y);
 		}
-    updateArea(next_x-1,next_y-1,next_x+core().selWidth()+1,next_y+core().selHeight()+1);
+    updateArea(next_x-1,next_y-1,next_x+m_palette->selWidth()+1,next_y+m_palette->selHeight()+1);
     if (next_x - cur_x != 0 || next_y - cur_y != 0) {
         // TODO: replace this with a better line algorithm
         if (next_x - cur_x > 0) {next_x--;}
@@ -933,35 +945,36 @@ void MapScene::drawRect(int next_x, int next_y)
 		for (int y = y1; y <= y2; y++)
 		{
 			if (core().layer() == Core::LOWER)
-				m_lower[static_cast<size_t>(_index(x,y))] = core().selection(x-fst_x,y-fst_y);
+                m_lower[static_cast<size_t>(_index(x,y))] = m_palette->selection(x-fst_x,y-fst_y);
 			else if (core().layer() == Core::UPPER)
-				m_upper[static_cast<size_t>(_index(x,y))] = core().selection(x-fst_x,y-fst_y);
-		}
-    // FIXME: without a redrawLayer it doesn't clean up after itself properly
+                m_upper[static_cast<size_t>(_index(x,y))] = m_palette->selection(x-fst_x,y-fst_y);
+        }
+    updateArea(x1-2, y1-2, x2+2, y2+2);
+    // FIXME: only redraw the area that doesn't intersect
     x1 = fst_x > cur_x ? cur_x : fst_x;
     x2 = fst_x > cur_x ? fst_x : cur_x;
     y1 = fst_y > cur_y ? cur_y : fst_y;
     y2 = fst_y > cur_y ? fst_y : cur_y;
-    updateArea(x1-2, y1-2, x2+2, y2+2);
+    redrawArea(core().layer(), x1-2, y1-2, x2+2, y2+2);
 }
 
 void MapScene::drawFill(int terrain_id, int x, int y)
 {
 	if (x < 0 || x >= m_map->width || y < 0 || y >= m_map->height)
 		return;
-	if (terrain_id == core().selection(x-fst_x,y-fst_y))
+    if (terrain_id == m_palette->selection(x-fst_x,y-fst_y))
 		return;
 	switch (core().layer())
 	{
 	case (Core::LOWER):
         if (TileOps::translate(m_lower[static_cast<size_t>(_index(x,y))]) != terrain_id)
 			return;
-		m_lower[static_cast<size_t>(_index(x,y))] = core().selection(x-fst_x,y-fst_y);
+        m_lower[static_cast<size_t>(_index(x,y))] = m_palette->selection(x-fst_x,y-fst_y);
 		break;
 	case (Core::UPPER):
         if (TileOps::translate(m_upper[static_cast<size_t>(_index(x,y))]) != terrain_id)
 			return;
-		m_upper[static_cast<size_t>(_index(x,y))] = core().selection(x-fst_x,y-fst_y);
+        m_upper[static_cast<size_t>(_index(x,y))] = m_palette->selection(x-fst_x,y-fst_y);
 		break;
 	default:
 		break;

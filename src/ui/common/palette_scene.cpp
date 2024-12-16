@@ -41,6 +41,91 @@ PaletteScene::PaletteScene(QObject *parent) :
 	m_tiles->setGraphicsEffect(effect);
 	m_tiles->stackBefore(m_selectionItem);
 	setBackgroundBrush(QBrush(QPixmap(":/embedded/share/old_grid.png")));
+    m_lowerSel.push_back(0);
+    m_upperSel.push_back(10000);
+    m_lowerSelW = 1;
+    m_upperSelW = 1;
+    m_lowerSelH = 1;
+    m_upperSelH = 1;
+    m_eventSel = 10000;
+    m_lowerRect = QRectF(QRect(0, 0, 16, 16));
+    m_upperRect = QRectF(QRect(0, 0, 16, 16));
+}
+
+short PaletteScene::selection(int off_x, int off_y)
+{
+    short result = 0;
+    switch(core().layer())
+    {
+    case Core::LOWER:
+        off_x %= m_lowerSelW;
+        off_y %= m_lowerSelH;
+        if (off_x < 0)
+            off_x += m_lowerSelW;
+        if (off_y < 0)
+            off_y += m_lowerSelH;
+        result = m_lowerSel[static_cast<size_t>(off_x+off_y*m_lowerSelW)];
+        break;
+    case Core::UPPER:
+        off_x %= m_upperSelW;
+        off_y %= m_upperSelH;
+        if (off_x < 0)
+            off_x += m_upperSelW;
+        if (off_y < 0)
+            off_y += m_upperSelH;
+        result = m_upperSel[static_cast<size_t>(off_x+off_y*m_upperSelW)];
+        break;
+    case Core::EVENT:
+        result = m_eventSel;
+        break;
+    }
+    return result;
+}
+
+int PaletteScene::selWidth()
+{
+    switch(core().layer()) {
+    case (Core::LOWER):
+        return m_lowerSelW;
+    case (Core::UPPER):
+        return m_upperSelW;
+    default:
+        return 1;
+    }
+}
+
+int PaletteScene::selHeight()
+{
+    switch(core().layer()) {
+    case (Core::LOWER):
+        return m_lowerSelH;
+    case (Core::UPPER):
+        return m_upperSelH;
+    default:
+        return 1;
+    }
+}
+
+void PaletteScene::setSelection(std::vector<short> n_sel, int n_w, int n_h)
+{
+    if (static_cast<int>(n_sel.size()) != n_w * n_h)
+        return;
+    switch(core().layer())
+    {
+    case Core::LOWER:
+        m_lowerSel = n_sel;
+        m_lowerSelW = n_w;
+        m_lowerSelH = n_h;
+        break;
+    case Core::UPPER:
+        m_upperSel = n_sel;
+        m_upperSelW = n_w;
+        m_upperSelH = n_h;
+        break;
+    case Core::EVENT:
+        m_eventSel = n_sel[0];
+        break;
+    }
 }
 
 void PaletteScene::onLayerChange()
@@ -49,13 +134,20 @@ void PaletteScene::onLayerChange()
 	{
 		m_tiles->setPixmap(m_lowerTiles);
         this->setSceneRect(QRect(0,0,96,448));
+        //m_selectionItem->setRect();
 	}
 	else
 	{
 		m_tiles->setPixmap(m_upperTiles);
         this->setSceneRect(QRect(0,0,96,400));
+        if (core().layer() == Core::UPPER) {
+            //m_selectionItem->setRect();
+        } else {
+            //m_selectionItem->setRect();
+        }
 	}
 	m_tiles->graphicsEffect()->setEnabled(core().layer() != Core::LOWER);
+    recalculateSelectionRect();
 }
 
 void PaletteScene::onChipsetChange(std::shared_ptr<emhash8::HashMap<short, QPixmap>> chipset)
@@ -79,31 +171,57 @@ void PaletteScene::onChipsetChange(std::shared_ptr<emhash8::HashMap<short, QPixm
 void PaletteScene::updateSelectionRect()
 {
 	QRectF selRect;
+
     int small_x = (m_initial.x() <= m_current.x()) ? static_cast<int>(m_initial.x())/16 : static_cast<int>(m_current.x())/16;
     int big_x = (m_initial.x() >= m_current.x()) ? static_cast<int>(m_initial.x())/16 : static_cast<int>(m_current.x())/16;
     int small_y = (m_initial.y() <= m_current.y()) ? static_cast<int>(m_initial.y())/16 : static_cast<int>(m_current.y())/16;
     int big_y = (m_initial.y() >= m_current.y()) ? static_cast<int>(m_initial.y())/16 : static_cast<int>(m_current.y())/16;
-	//keep inside the scene
-	if (small_x < 0)
-		small_x = 0;
-	if (small_x > 5)
-		small_x = 5;
-	if (big_x > 5)
-		big_x = 5;
-	if (small_y < 0)
-		small_y = 0;
-	if (big_y > 27)
-		big_y = 27;
-	if (big_y - small_y > 5)
-	{
+    //keep inside the scene
+    if (small_x < 0)
+        small_x = 0;
+    if (small_x > 5)
+        small_x = 5;
+    if (big_x > 5)
+        big_x = 5;
+    if (small_y < 0)
+        small_y = 0;
+    if (big_y > 27)
+        big_y = 27;
+    if (big_y - small_y > 5)
+    {
         if (static_cast<int>(m_initial.y())/16 == small_y)
-			big_y = small_y + 5;
-		else
-			small_y = big_y - 5;
+            big_y = small_y + 5;
+        else
+            small_y = big_y - 5;
     }
-    selRect = QRectF(QRect(small_x*16,small_y*16,(big_x-small_x+1)*16,(big_y-small_y+1)*16));
+    if (core().layer() != Core::EVENT) {
+        selRect = QRectF(QRect(small_x*16,small_y*16,(big_x-small_x+1)*16,(big_y-small_y+1)*16));
+    } else {
+        selRect = QRectF(QRect(small_x*16,small_y*16,16, 16));
+    }
+
+    if (core().layer() == Core::LOWER) {
+        m_lowerRect = selRect;
+    } else if (core().layer() == Core::UPPER) {
+        m_upperRect = selRect;
+    }
 
 	m_selectionItem->setRect(selRect);
+}
+
+void PaletteScene::recalculateSelectionRect() {
+    QRect bogus;
+    switch (core().layer()) {
+    case (Core::LOWER):
+        m_selectionItem->setRect(m_lowerRect);
+        break;
+    case (Core::UPPER):
+        m_selectionItem->setRect(m_upperRect);
+        break;
+    default:
+        m_selectionItem->setRect(QRect(((m_eventSel - 10000) % 6) * 16, ((m_eventSel - 10000) / 6) * 16, 16, 16));
+        break;
+    }
 }
 
 void PaletteScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -123,7 +241,7 @@ void PaletteScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void PaletteScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-	if (m_cancel)
+    if (m_cancel || core().layer() == Core::EVENT)
         return;
 	else
 		m_current = event->scenePos();
@@ -142,7 +260,6 @@ void PaletteScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 	if (event->button() != Qt::LeftButton)
 		return;
 
-	//TODO: set selection
 	std::vector<short> sel;
     int x = static_cast<int>(m_selectionItem->rect().left())/16;
     int y = static_cast<int>(m_selectionItem->rect().top())/16;
@@ -154,7 +271,7 @@ void PaletteScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
                 sel.push_back(TileOps::translate(_x+_y*6, SAMPLE));
             else
                 sel.push_back(TileOps::translate(_x+_y*6+162, SAMPLE));
-    core().setSelection(sel, w, h);
+    setSelection(sel, w, h);
     last_selection = m_selectionItem->boundingRect();
 	QGraphicsScene::mouseReleaseEvent(event);
 }

@@ -39,13 +39,6 @@ Core::Core()
 	m_tileSize = 16;
 	m_tool = PENCIL;
 	m_layer = LOWER;
-	m_lowerSel.push_back(0);
-	m_upperSel.push_back(10000);
-	m_lowerSelW = 1;
-	m_upperSelW = 1;
-	m_lowerSelH = 1;
-	m_upperSelH = 1;
-    m_eventSel = 10000;
 
 	m_runGameDialog = nullptr;
 }
@@ -137,78 +130,6 @@ const std::shared_ptr<Project>& Core::project() const {
 void Core::setRtpDir(const QString &n_path)
 {
 	m_rtpDir = n_path;
-}
-
-short Core::selection(int off_x, int off_y)
-{
-	short result = 0;
-	switch(m_layer)
-	{
-	case LOWER:
-		off_x %= m_lowerSelW;
-		off_y %= m_lowerSelH;
-		if (off_x < 0)
-			off_x += m_lowerSelW;
-		if (off_y < 0)
-			off_y += m_lowerSelH;
-		result = m_lowerSel[static_cast<size_t>(off_x+off_y*m_lowerSelW)];
-		break;
-	case UPPER:
-		off_x %= m_upperSelW;
-		off_y %= m_upperSelH;
-		if (off_x < 0)
-			off_x += m_upperSelW;
-		if (off_y < 0)
-			off_y += m_upperSelH;
-		result = m_upperSel[static_cast<size_t>(off_x+off_y*m_upperSelW)];
-		break;
-	case EVENT:
-		result = m_eventSel;
-		break;
-	}
-	return result;
-}
-
-int Core::selWidth()
-{
-	int w = 1;
-	if (m_layer == LOWER)
-		w = m_lowerSelW;
-	if (m_layer == UPPER)
-		w = m_upperSelW;
-	return w;
-}
-
-int Core::selHeight()
-{
-	int h = 1;
-	if (m_layer == LOWER)
-		h = m_lowerSelH;
-	if (m_layer == UPPER)
-		h = m_upperSelH;
-	return h;
-}
-
-void Core::setSelection(std::vector<short> n_sel, int n_w, int n_h)
-{
-	if (static_cast<int>(n_sel.size()) != n_w * n_h)
-		return;
-	switch(m_layer)
-	{
-	case LOWER:
-		m_lowerSel = n_sel;
-		m_lowerSelW = n_w;
-		m_lowerSelH = n_h;
-		break;
-	case UPPER:
-		m_upperSel = n_sel;
-		m_upperSelW = n_w;
-		m_upperSelH = n_h;
-		break;
-	case EVENT:
-		m_eventSel = n_sel[0];
-		break;
-	}
 }
 
 void Core::cacheEvent(const lcf::rpg::Event* ev, QString key) {

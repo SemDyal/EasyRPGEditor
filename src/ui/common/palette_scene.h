@@ -28,18 +28,20 @@ class PaletteScene : public QGraphicsScene
 {
 	Q_OBJECT
 public:
-
 	explicit PaletteScene(QObject *parent = nullptr);
 
-
+    short selection(int off_x, int off_y);
+    int selWidth();
+    int selHeight();
+    void setSelection(std::vector<short> n_sel, int n_w, int n_h);
 signals:
 
 public slots:
 	void onLayerChange();
     void onChipsetChange(std::shared_ptr<emhash8::HashMap<short, QPixmap> >);
 protected:
-
 	void updateSelectionRect();
+    void recalculateSelectionRect();
 
 	void mousePressEvent(QGraphicsSceneMouseEvent *event);
 	void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
@@ -53,10 +55,19 @@ protected:
 	QGraphicsRectItem* m_selectionItem;
 	QPixmap m_lowerTiles;
 	QPixmap m_upperTiles;
+    std::vector<short> m_lowerSel;
+    std::vector<short> m_upperSel;
+    short m_eventSel;
+    int m_lowerSelW;
+    int m_lowerSelH;
+    int m_upperSelW;
+    int m_upperSelH;
 	QRectF last_selection;
 	QPointF m_initial;
 	QPointF m_current;
     RpgPainter m_painter;
 
+    QRectF m_lowerRect;
+    QRectF m_upperRect;
 };
 

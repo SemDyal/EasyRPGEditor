@@ -83,11 +83,6 @@ public:
 
 	void setRtpDir(const QString &n_path);
 
-	short selection(int off_x, int off_y);
-	int selWidth();
-	int selHeight();
-	void setSelection(std::vector<short> n_sel, int n_w, int n_h);
-
 	void cacheEvent(const lcf::rpg::Event* ev, QString key);
 
 	void runGame();
@@ -112,13 +107,6 @@ private:
 	Layer m_layer;
     Tool m_tool;
     emhash8::HashMap<QString, QPixmap> m_eventCache;
-	std::vector<short> m_lowerSel;
-	std::vector<short> m_upperSel;
-	short m_eventSel;
-	int m_lowerSelW;
-	int m_lowerSelH;
-	int m_upperSelW;
-	int m_upperSelH;
     static Core *core_instance;
 	RunGameDialog *m_runGameDialog;
     std::shared_ptr<Project> m_project;

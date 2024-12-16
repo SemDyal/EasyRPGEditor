@@ -27,9 +27,11 @@
 #include <QUndoStack>
 #include <QTreeWidgetItem>
 #include <memory>
+#include <qevent.h>
 #include <lcf/rpg/map.h>
 #include <lcf/rpg/mapinfo.h>
 #include <ui/rpg_painter.h>
+#include <ui/common/palette_scene.h>
 #include "common/dbstring.h"
 #include "core.h"
 
@@ -39,7 +41,7 @@ class MapScene : public QGraphicsScene
 {
 	Q_OBJECT
 public:
-	explicit MapScene(ProjectData& project, int id, QGraphicsView *view, QObject *parent = nullptr);
+    explicit MapScene(ProjectData& project, int id, QGraphicsView *view, PaletteScene *palette, QObject *parent = nullptr);
 	~MapScene();
 
 	void Init();
@@ -113,6 +115,8 @@ protected:
 	void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 	void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 	void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+    void keyPressEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *event);
 
 private:
 	int _x(int index);
@@ -124,7 +128,7 @@ private:
 					const QRect &dest_rec);
 	void stopDrawing();
 	void stopSelecting();
-	void updateArea(int x1, int y1, int x2, int y2);
+    void updateArea(int x1, int y1, int x2, int y2);
     void redrawArea(Core::Layer layer, int x1, int y1, int x2, int y2);
 	void redrawLayer(Core::Layer layer);
     void drawPen();
@@ -156,6 +160,8 @@ private:
 	int s_tileSize;
     int cur_x = -1;
     int cur_y = -1;
+    bool m_shift = false;
+    bool in_bounds;
 	int fst_x;
 	int fst_y;
 	int lst_x;
@@ -174,5 +180,6 @@ private:
     emhash8::HashMap<int, lcf::rpg::Event*> *m_currentMapEvents;
     int m_lastHScrollPos;
     int m_lastVScrollPos;
+    PaletteScene *m_palette;
 };
 
