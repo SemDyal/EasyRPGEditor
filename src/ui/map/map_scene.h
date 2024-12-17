@@ -30,6 +30,7 @@
 #include <qevent.h>
 #include <lcf/rpg/map.h>
 #include <lcf/rpg/mapinfo.h>
+#include <qshortcut.h>
 #include <ui/rpg_painter.h>
 #include <ui/common/palette_scene.h>
 #include "common/dbstring.h"
@@ -92,6 +93,10 @@ private slots:
 
 	void on_actionSetStartPosition();
 
+    void on_actionCopy();
+    void on_actionCut();
+    void on_actionPaste();
+
 	void on_actionNewEvent();
 
 	void on_actionEditEvent();
@@ -119,6 +124,7 @@ protected:
     void keyReleaseEvent(QKeyEvent *event);
 
 private:
+    void processTools(int next_x, int next_y);
 	int _x(int index);
 	int _y(int index);
 	int _index(int x, int y);
@@ -181,5 +187,6 @@ private:
     int m_lastHScrollPos;
     int m_lastVScrollPos;
     PaletteScene *m_palette;
+
 };
 

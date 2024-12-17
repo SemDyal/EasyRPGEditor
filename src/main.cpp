@@ -53,7 +53,12 @@ int main(int argc, char *argv[])
 		found = t.load(e);
 #endif
 	if (!found)
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 8, 0))
+        found = t.load(QLocale(), "easyrpg-editor", "_", ":/i18n");
+#else
         found = t.load(QLocale(), u"easyrpg-editor"_qs, u"_"_qs, u":/i18n"_qs);
+#endif
+
     if (found)
         a.installTranslator(&t);
 	else

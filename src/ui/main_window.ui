@@ -359,7 +359,7 @@
     <string>Open an existing Game Project</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+O</string>
+    <string>Ctrl+Alt+O</string>
    </property>
   </action>
   <action name="actionProjectNew">
@@ -370,7 +370,7 @@
     <string>Create a new Game Project</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+N</string>
+    <string>Ctrl+Alt+N</string>
    </property>
   </action>
   <action name="actionProjectClose">
@@ -381,7 +381,7 @@
     <string>Close current opened Game Project</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+X</string>
+    <string>Ctrl+Alt+X</string>
    </property>
   </action>
   <action name="actionGameDiskCreate">
@@ -491,9 +491,6 @@
    <property name="statusTip">
     <string>Zoom In</string>
    </property>
-   <property name="shortcut">
-    <string>+</string>
-   </property>
   </action>
   <action name="actionZoomOut">
    <property name="text">
@@ -504,9 +501,6 @@
    </property>
    <property name="statusTip">
     <string>Zoom Out</string>
-   </property>
-   <property name="shortcut">
-    <string>-</string>
    </property>
   </action>
   <action name="actionDatabase">
