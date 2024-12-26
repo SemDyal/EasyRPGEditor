@@ -77,8 +77,11 @@ namespace LcfWidgetBinding {
 			auto data = variant.value<LcfObjectHolder<T>>();
 			data.obj() = static_cast<T>(checkBox->isChecked());
 		};
-
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 7, 0))
         QWidget::connect(checkBox, &QCheckBox::checkStateChanged, parent, callback);
+#else
+        QWidget::connect(checkBox, &QCheckBox::stateChanged, parent, callback);
+#endif
 	}
 
 	template<typename T>

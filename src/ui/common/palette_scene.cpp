@@ -134,17 +134,11 @@ void PaletteScene::onLayerChange()
 	{
 		m_tiles->setPixmap(m_lowerTiles);
         this->setSceneRect(QRect(0,0,96,448));
-        //m_selectionItem->setRect();
 	}
 	else
 	{
 		m_tiles->setPixmap(m_upperTiles);
         this->setSceneRect(QRect(0,0,96,400));
-        if (core().layer() == Core::UPPER) {
-            //m_selectionItem->setRect();
-        } else {
-            //m_selectionItem->setRect();
-        }
 	}
 	m_tiles->graphicsEffect()->setEnabled(core().layer() != Core::LOWER);
     recalculateSelectionRect();

@@ -791,9 +791,10 @@ void MainWindow::on_actionProjectOpen_triggered()
 {
 	OpenProjectDialog dlg(this);
 	dlg.setDefaultDir(core().defDir());
-	if (dlg.exec() == QDialog::Accepted)
+    if (dlg.exec()) {
         closeProject();
-		LoadProject(dlg.getProject()->projectDir().absolutePath());
+        LoadProject(dlg.getProject()->projectDir().absolutePath());
+    }
 	core().setDefDir(dlg.getDefaultDir());
 	m_settings.setValue(DEFAULT_DIR_KEY,dlg.getDefaultDir());
 }
