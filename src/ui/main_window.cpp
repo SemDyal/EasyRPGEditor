@@ -518,7 +518,8 @@ void MainWindow::update_actions()
 	ui->actionZoomIn->setEnabled(has_project);
 	ui->actionZoomOut->setEnabled(has_project);
 	ui->actionSearch->setEnabled(has_project);
-	ui->actionUndo->setEnabled(currentScene() && currentScene()->isModified());
+    ui->actionUndo->setEnabled(currentScene() && currentScene()->canUndo());
+    ui->actionRedo->setEnabled(currentScene() && currentScene()->canRedo());
 	ui->actionZoom->setEnabled(has_project);
 	ui->actionProjectClose->setEnabled(has_project);
 	ui->actionLayerEvents->setEnabled(has_project);
@@ -708,6 +709,10 @@ QGraphicsView *MainWindow::getView(int id)
 		}
 		ui->tabMap->addTab(view, QIcon(":/icons/share/old_map.png"), mapName);
         view->setScene(new MapScene(core().project()->projectData(), id, view, m_paletteScene, this));
+        connect(getScene(id),
+                SIGNAL(mapCleanChanged(bool)),
+                this,
+                SLOT(on_mapCleanChanged(bool)));
 		connect(getScene(id),
 				SIGNAL(mapChanged()),
 				this,
@@ -715,11 +720,11 @@ QGraphicsView *MainWindow::getView(int id)
 		connect(getScene(id),
 				SIGNAL(mapReverted()),
 				this,
-				SLOT(on_mapUnchanged()));
+                SLOT(on_mapChanged()));
 		connect(getScene(id),
 				SIGNAL(mapSaved()),
 				this,
-				SLOT(on_mapUnchanged()));
+                SLOT(on_mapChanged()));
 		getScene(id)->setScale(2.0);
 		getScene(id)->Init();
 	}
@@ -910,7 +915,8 @@ void MainWindow::on_tabMap_currentChanged(int index)
 	}
 	if (currentScene())
 	{
-		ui->actionUndo->setEnabled(currentScene()->isModified());
+        ui->actionUndo->setEnabled(currentScene() && currentScene()->canUndo());
+        ui->actionRedo->setEnabled(currentScene() && currentScene()->canRedo());
 		ui->actionMapSave->setEnabled(currentScene()->isModified());
 		ui->actionMapRevert->setEnabled(currentScene()->isModified());
         currentScene()->redrawMap();
@@ -989,23 +995,28 @@ void MainWindow::on_actionPlayTest_triggered()
 
 void MainWindow::on_mapChanged()
 {
-	ui->actionMapRevert->setEnabled(true);
-	ui->actionMapSave->setEnabled(true);
-	ui->actionUndo->setEnabled(true);
-	ui->tabMap->setTabText(ui->tabMap->currentIndex(), currentScene()->mapName()+" *");
+    ui->actionUndo->setEnabled(currentScene() && currentScene()->canUndo());
+    ui->actionRedo->setEnabled(currentScene() && currentScene()->canRedo());
 }
 
-void MainWindow::on_mapUnchanged()
+void MainWindow::on_mapCleanChanged(bool clean)
 {
-	ui->actionMapRevert->setEnabled(false);
-	ui->actionMapSave->setEnabled(false);
-	ui->actionUndo->setEnabled(false);
-	ui->tabMap->setTabText(ui->tabMap->currentIndex(), currentScene()->mapName());
+    ui->tabMap->setTabText(ui->tabMap->currentIndex(),
+        clean
+        ? currentScene()->mapName()
+        : currentScene()->mapName() + " *");
+    ui->actionMapSave->setEnabled(!clean);
+    ui->actionMapRevert->setEnabled(!clean);
 }
 
 void MainWindow::on_actionUndo_triggered()
 {
 	currentScene()->undo();
+}
+
+void MainWindow::on_actionRedo_triggered()
+{
+    currentScene()->redo();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -1389,6 +1400,7 @@ void MainWindow::refreshIcons() {
 	set(ui->actionDrawRectangle, "draw-rectangle");
 	set(ui->actionDrawFill, "draw-fill");
 	set(ui->actionUndo, "edit-undo");
+    set(ui->actionRedo, "edit-redo");
 	set(ui->actionZoom, "zoom");
 
 	// Map Tree

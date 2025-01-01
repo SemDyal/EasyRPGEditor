@@ -112,9 +112,11 @@ private slots:
 
 	void on_mapChanged();
 
-	void on_mapUnchanged();
+    void on_mapCleanChanged(bool changed);
 
 	void on_actionUndo_triggered();
+
+    void on_actionRedo_triggered();
 
 	void on_actionMapSave_triggered();
 

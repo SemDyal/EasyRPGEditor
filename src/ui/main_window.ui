@@ -324,6 +324,7 @@
     <bool>true</bool>
    </attribute>
    <addaction name="actionUndo"/>
+   <addaction name="actionRedo"/>
    <addaction name="separator"/>
    <addaction name="actionZoom"/>
    <addaction name="actionDrawPen"/>
@@ -359,7 +360,7 @@
     <string>Open an existing Game Project</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Alt+O</string>
+    <string>Ctrl+Shift+O</string>
    </property>
   </action>
   <action name="actionProjectNew">
@@ -370,7 +371,7 @@
     <string>Create a new Game Project</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Alt+N</string>
+    <string>Ctrl+Shift+N</string>
    </property>
   </action>
   <action name="actionProjectClose">
@@ -379,9 +380,6 @@
    </property>
    <property name="statusTip">
     <string>Close current opened Game Project</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Alt+X</string>
    </property>
   </action>
   <action name="actionGameDiskCreate">
@@ -648,6 +646,9 @@
    <property name="shortcut">
     <string>Ctrl+Z</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ShortcutContext::WindowShortcut</enum>
+   </property>
   </action>
   <action name="actionZoom">
    <property name="checkable">
@@ -832,6 +833,27 @@
   <action name="actionReset_Cache">
    <property name="text">
     <string>Reset Cache</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="icon">
+    <iconset resource="../../resources/Resources.qrc">
+     <normaloff>:/dark/edit-redo</normaloff>:/dark/edit-redo</iconset>
+   </property>
+   <property name="text">
+    <string>Redo</string>
+   </property>
+   <property name="toolTip">
+    <string>Redo action</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+Z</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ShortcutContext::WindowShortcut</enum>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::TextHeuristicRole</enum>
    </property>
   </action>
  </widget>

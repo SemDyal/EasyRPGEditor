@@ -60,6 +60,10 @@ public:
     emhash8::HashMap<int, lcf::rpg::Event *> *mapEvents();
 	void editMapProperties(QTreeWidgetItem *item);
 
+    inline bool canUndo() {return m_undoStack->canUndo();};
+    inline bool canRedo() {return m_undoStack->canRedo();};
+    inline bool isClean() {return m_undoStack->isClean();};
+
     lcf::rpg::Event *currentMapEvent(int eventID);
     void loadEvents();
     void setCurrentMapEvents(emhash8::HashMap<int, lcf::rpg::Event *> *events);
@@ -73,7 +77,7 @@ signals:
 
 	void mapSaved();
 
-	void mapReverted();
+    void mapCleanChanged(bool clean);
 
 public slots:
 	void redrawMap();
@@ -82,11 +86,14 @@ public slots:
 
 	void onToolChanged();
 
+    void onCleanChanged(bool clean);
+
 	void Save(bool properties_changed = false);
 
     void Load(bool revert = false);
 
-	void undo();
+    void undo();
+    void redo();
 
 private slots:
 	void on_actionRunHere();
@@ -166,7 +173,6 @@ private:
 	int s_tileSize;
     int cur_x = -1;
     int cur_y = -1;
-    bool m_shift = false;
     bool in_bounds;
 	int fst_x;
 	int fst_y;

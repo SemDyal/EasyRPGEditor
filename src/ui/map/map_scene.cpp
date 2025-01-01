@@ -171,6 +171,10 @@ void MapScene::Init()
 			SIGNAL(layerChanged()),
 			this,
 			SLOT(onLayerChanged()));
+    connect(this->m_undoStack,
+            SIGNAL(cleanChanged(bool)),
+            this,
+            SLOT(onCleanChanged(bool)));
 	m_view->verticalScrollBar()->setValue(n_mapInfo.scrollbar_y *static_cast<int>(m_scale));
 	m_view->horizontalScrollBar()->setValue(n_mapInfo.scrollbar_x * static_cast<int>(m_scale));
     m_init = true;
@@ -188,7 +192,7 @@ QString MapScene::mapName() const
 
 bool MapScene::isModified() const
 {
-	return (m_undoStack->count() > 0);
+    return (!m_undoStack->isClean());
 }
 
 int MapScene::id() const
@@ -221,6 +225,7 @@ void MapScene::setLayerData(Core::Layer layer, std::vector<short> data)
 	redrawLayer(layer);
 }
 
+// Pass the source event at this ID to delete it.
 void MapScene::setEventData(int id, const lcf::rpg::Event &data)
 {
 	for (unsigned int i = 0; i < m_map->events.size(); i++) {
@@ -364,6 +369,10 @@ void MapScene::onToolChanged()
 	}
 }
 
+void MapScene::onCleanChanged(bool clean) {
+    emit mapCleanChanged(clean);
+}
+
 void MapScene::Save(bool properties_changed)
 {
 	if (!isModified() && !properties_changed)
@@ -384,7 +393,7 @@ void MapScene::Save(bool properties_changed)
     lcf::LMU_Reader::PrepareSave(*m_map);
     // FIXME: ProjectData.Project is Const
 	core().project()->saveMap(*m_map, n_mapInfo.ID);
-	m_undoStack->clear();
+    m_undoStack->setClean();
 	emit mapSaved();
 }
 void MapScene::Load(bool revert)
@@ -403,25 +412,27 @@ void MapScene::Load(bool revert)
         qWarning()<<"Map loading failed!";
     }
     m_map = m_project.project().loadMap(n_mapInfo.ID);
-    m_lower =  m_map->lower_layer;
-	m_upper =  m_map->upper_layer;
+    m_lower = m_map->lower_layer;
+    m_upper = m_map->upper_layer;
 
 	if (!revert) {
-		redrawGrid();
-	}
-
-	m_undoStack->clear();
-	emit mapReverted();
+        redrawGrid();
+    } else {
+        redrawMap();
+    }
+    m_undoStack->clear();
 }
 
 void MapScene::undo()
 {
 	m_undoStack->undo();
-	if (m_undoStack->index() == 0)
-	{
-		m_undoStack->clear();
-		emit mapReverted();
-	}
+    emit mapChanged();
+}
+
+void MapScene::redo()
+{
+    m_undoStack->redo();
+    emit mapChanged();
 }
 
 void MapScene::on_actionCopy() {
@@ -461,7 +472,8 @@ void MapScene::on_actionNewEvent()
 	if (result != QDialogButtonBox::Cancel)
 	{
 		m_map->events.push_back(event);
-		m_undoStack->push(new UndoEvent(event, this));
+        lcf::rpg::Event backup = event;
+        m_undoStack->push(new UndoEvent(event, this));
         redrawArea(Core::UPPER, event.x, event.y, event.x, event.y);
 		emit mapChanged();
 	}
@@ -474,7 +486,7 @@ void MapScene::on_actionEditEvent() {
 			lcf::rpg::Event backup = *ev;
             int result = EventDialog::edit(m_view, *ev, m_project, this);
 			if (result != QDialogButtonBox::Cancel) {
-				m_undoStack->push(new UndoEvent(backup, this));
+                m_undoStack->push(new UndoEvent(backup, this));
 				emit mapChanged();
 			}
             redrawArea(Core::UPPER, ev->x, ev->y, ev->x, ev->y);
@@ -496,6 +508,7 @@ void MapScene::on_actionCutEvent() {
 void MapScene::on_actionPasteEvent() {
 	int id = getFirstFreeId();
 
+    lcf::rpg::Event backup = event_clipboard;
 	lcf::rpg::Event event = event_clipboard;
 	event.ID = id;
     event.name = ToDBString(QString("EV%1").arg(QString::number(id), 4, u'0'));
@@ -503,7 +516,7 @@ void MapScene::on_actionPasteEvent() {
     event.y = cur_y;
 
 	m_map->events.push_back(event);
-	m_undoStack->push(new UndoEvent(event, this));
+    m_undoStack->push(new UndoEvent(event, this));
     redrawArea(Core::UPPER, event.x, event.y, event.x, event.y);
 	emit mapChanged();
 }
@@ -518,7 +531,7 @@ void MapScene::on_actionDeleteEvent()
 	if (ev != m_map->events.end())
 	{
 		lcf::rpg::Event backup = *ev;
-		m_undoStack->push(new UndoEvent(backup, this));
+        m_undoStack->push(new UndoEvent(backup, this));
 
 		m_map->events.erase(ev);
         redrawArea(Core::UPPER, ev->x, ev->y, ev->x, ev->y);
@@ -582,6 +595,10 @@ void MapScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
             setScale(m_scale/2);
         else if (sceneRect().contains(event->scenePos()) && core().layer() == Core::EVENT)
         {
+            m_selecting = true;
+            m_selectionTile->setVisible(true);
+            m_selectionTile->setRect(QRectF(QRect(cur_x*core().tileSize(),cur_y*core().tileSize(),
+                                                  core().tileSize(),core().tileSize())));
             lcf::rpg::Event *selection = getEventAt(cur_x, cur_y);
             m_eventMenu->actions()[2]->setEnabled(!selection);
             m_eventMenu->actions()[3]->setEnabled(selection);
@@ -685,6 +702,7 @@ void MapScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 		{
 			m_undoStack->push(new UndoDraw(Core::LOWER,
 											m_map->lower_layer,
+                                            m_lower,
 											this));
 			m_map->lower_layer = m_lower;
 		}
@@ -692,6 +710,7 @@ void MapScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 		{
 			m_undoStack->push(new UndoDraw(Core::UPPER,
 											m_map->upper_layer,
+                                            m_upper,
 											this));
 			m_map->upper_layer = m_upper;
 		}
@@ -717,9 +736,6 @@ void MapScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 }
 
 void MapScene::keyPressEvent(QKeyEvent *event) {
-    if (event->key() == Qt::Key_Shift) {
-        m_shift = true;
-    }
     if (event->key() == Qt::Key_Delete) {
         if (core().layer() == Core::EVENT && getEventAt(cur_x, cur_y)) {
             on_actionDeleteEvent();
@@ -729,9 +745,6 @@ void MapScene::keyPressEvent(QKeyEvent *event) {
 }
 
 void MapScene::keyReleaseEvent(QKeyEvent *event) {
-    if (event->key() == Qt::Key_Shift) {
-        m_shift = false;
-    }
     processTools(cur_x, cur_y);
 }
 
@@ -820,7 +833,7 @@ void MapScene::updateArea(int x1, int y1, int x2, int y2)
         y2 = m_map->height;
 
     // TODO: shift mode breaks on autotiles
-    if (core().layer() == Core::LOWER && !m_shift) {
+    if (core().layer() == Core::LOWER && !QGuiApplication::queryKeyboardModifiers().testFlag(Qt::ShiftModifier)) {
         for (int x = x1; x <= x2; x++) {
             for (int y = y1; y <= y2; y++) {
                 if (!TileOps::isEblock(TileOps::translate(m_lower[static_cast<size_t>(_index(x, y))])))

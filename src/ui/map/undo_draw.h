@@ -25,18 +25,21 @@ class UndoDraw : public QUndoCommand
 {
 public:
 	explicit UndoDraw(Core::Layer layer,
-					   std::vector<short> data,
+                       std::vector<short> changed,
+                       std::vector<short> orig,
 					   MapScene *scene,
 					   QUndoCommand *parent = nullptr);
 
 	void undo();
+    void redo();
 signals:
 
 public slots:
 
 private:
 	Core::Layer m_layer;
-	std::vector<short> m_data;
+    std::vector<short> m_changed;
+    std::vector<short> m_orig;
 	MapScene* m_scene;
 };
 

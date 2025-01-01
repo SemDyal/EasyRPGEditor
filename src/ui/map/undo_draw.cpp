@@ -18,16 +18,23 @@
 #include "undo_draw.h"
 
 UndoDraw::UndoDraw(Core::Layer layer,
-					 std::vector<short> data,
-					 MapScene *scene,
-					 QUndoCommand *parent) :
+                    std::vector<short> changed,
+                    std::vector<short> orig,
+                    MapScene *scene,
+                    QUndoCommand *parent) :
 QUndoCommand(parent),
 m_layer(layer),
-m_data(data),
+m_changed(changed),
+m_orig(orig),
 m_scene(scene)
 {}
 
 void UndoDraw::undo()
 {
-	m_scene->setLayerData(m_layer, m_data);
+    m_scene->setLayerData(m_layer, m_changed);
+}
+
+void UndoDraw::redo()
+{
+    m_scene->setLayerData(m_layer, m_orig);
 }
