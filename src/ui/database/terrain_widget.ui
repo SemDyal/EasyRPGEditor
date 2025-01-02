@@ -270,7 +270,11 @@
                 </widget>
                </item>
                <item>
-                <widget class="QSpinBox" name="fgFrameHSpinBox"/>
+                <widget class="QSpinBox" name="fgFrameHSpinBox">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                </widget>
                </item>
                <item>
                 <widget class="QCheckBox" name="fgFrameVCheckBox">
@@ -280,7 +284,11 @@
                 </widget>
                </item>
                <item>
-                <widget class="QSpinBox" name="fgFrameVSpinBox"/>
+                <widget class="QSpinBox" name="fgFrameVSpinBox">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                </widget>
                </item>
               </layout>
              </widget>
@@ -306,7 +314,11 @@
                 </widget>
                </item>
                <item>
-                <widget class="QSpinBox" name="bgFrameHSpinBox"/>
+                <widget class="QSpinBox" name="bgFrameHSpinBox">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                </widget>
                </item>
                <item>
                 <widget class="QCheckBox" name="bgFrameVCheckBox">
@@ -316,7 +328,11 @@
                 </widget>
                </item>
                <item>
-                <widget class="QSpinBox" name="bgFrameVSpinBox"/>
+                <widget class="QSpinBox" name="bgFrameVSpinBox">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                </widget>
                </item>
               </layout>
              </widget>
@@ -345,6 +361,9 @@
             </item>
             <item>
              <widget class="QSpinBox" name="oddsPreemptiveSpinBox">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="suffix">
                <string>%</string>
               </property>
@@ -369,6 +388,9 @@
             </item>
             <item>
              <widget class="QSpinBox" name="oddsBackSpinBox">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="suffix">
                <string>%</string>
               </property>
@@ -393,6 +415,9 @@
             </item>
             <item>
              <widget class="QSpinBox" name="oddsPincerSpinBox">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="suffix">
                <string>%</string>
               </property>
@@ -417,6 +442,9 @@
             </item>
             <item>
              <widget class="QSpinBox" name="oddsSurpriseSpinBox">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="suffix">
                <string>%</string>
               </property>
@@ -540,5 +568,134 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>fgFrameHCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>fgFrameHSpinBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>467</x>
+     <y>232</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>467</x>
+     <y>264</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>fgFrameVCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>fgFrameVSpinBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>467</x>
+     <y>295</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>467</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>bgFrameHCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>bgFrameHSpinBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>467</x>
+     <y>435</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>467</x>
+     <y>467</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>bgFrameVCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>bgFrameVSpinBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>467</x>
+     <y>498</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>467</x>
+     <y>530</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>oddsPreemptiveCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>oddsPreemptiveSpinBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>674</x>
+     <y>167</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>674</x>
+     <y>199</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>oddsBackCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>oddsBackSpinBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>674</x>
+     <y>239</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>674</x>
+     <y>271</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>oddsPincerCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>oddsPincerSpinBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>674</x>
+     <y>311</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>674</x>
+     <y>343</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>oddsSurpriseCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>oddsSurpriseSpinBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>674</x>
+     <y>383</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>674</x>
+     <y>415</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

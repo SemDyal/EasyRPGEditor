@@ -51,44 +51,29 @@ MapPropertiesDialog::MapPropertiesDialog(ProjectData& project, lcf::rpg::MapInfo
 	ui->comboWrapping->addItem(tr("Both"), lcf::rpg::Map::ScrollType_both);
 
 	m_buttonGroupBGM = new QButtonGroup(this);
-	m_buttonGroupBGM->addButton(ui->radioBGMparent);
-	m_buttonGroupBGM->setId(ui->radioBGMparent, lcf::rpg::MapInfo::MusicType_parent);
-	m_buttonGroupBGM->addButton(ui->radioBGMevent);
-	m_buttonGroupBGM->setId(ui->radioBGMevent, lcf::rpg::MapInfo::MusicType_event);
-	m_buttonGroupBGM->addButton(ui->radioBGMspecify);
-	m_buttonGroupBGM->setId(ui->radioBGMspecify, lcf::rpg::MapInfo::MusicType_specific);
+    m_buttonGroupBGM->addButton(ui->radioBGMparent, lcf::rpg::MapInfo::MusicType_parent);
+    m_buttonGroupBGM->addButton(ui->radioBGMevent, lcf::rpg::MapInfo::MusicType_event);
+    m_buttonGroupBGM->addButton(ui->radioBGMspecify, lcf::rpg::MapInfo::MusicType_specific);
 
 	m_buttonGroupBackdrop = new QButtonGroup(this);
-	m_buttonGroupBackdrop->addButton(ui->radioBackdropParent);
-	m_buttonGroupBackdrop->setId(ui->radioBackdropParent, lcf::rpg::MapInfo::BGMType_parent);
-	m_buttonGroupBackdrop->addButton(ui->radioBackdropTerrain);
-	m_buttonGroupBackdrop->setId(ui->radioBackdropTerrain, lcf::rpg::MapInfo::BGMType_terrain);
-	m_buttonGroupBackdrop->addButton(ui->radioBackdropSpecify);
-	m_buttonGroupBackdrop->setId(ui->radioBackdropSpecify, lcf::rpg::MapInfo::BGMType_specific);
+    m_buttonGroupBackdrop->addButton(ui->radioBackdropParent, lcf::rpg::MapInfo::BGMType_parent);
+    m_buttonGroupBackdrop->addButton(ui->radioBackdropTerrain, lcf::rpg::MapInfo::BGMType_terrain);
+    m_buttonGroupBackdrop->addButton(ui->radioBackdropSpecify, lcf::rpg::MapInfo::BGMType_specific);
 
 	m_buttonGroupTeleport = new QButtonGroup(this);
-	m_buttonGroupTeleport->addButton(ui->radioTeleportParent);
-	m_buttonGroupTeleport->setId(ui->radioTeleportParent, lcf::rpg::MapInfo::TriState_parent);
-	m_buttonGroupTeleport->addButton(ui->radioTeleportAllow);
-	m_buttonGroupTeleport->setId(ui->radioTeleportAllow, lcf::rpg::MapInfo::TriState_allow);
-	m_buttonGroupTeleport->addButton(ui->radioTeleportForbid);
-	m_buttonGroupTeleport->setId(ui->radioTeleportForbid, lcf::rpg::MapInfo::TriState_forbid);
+    m_buttonGroupTeleport->addButton(ui->radioTeleportParent, lcf::rpg::MapInfo::TriState_parent);
+    m_buttonGroupTeleport->addButton(ui->radioTeleportAllow, lcf::rpg::MapInfo::TriState_allow);
+    m_buttonGroupTeleport->addButton(ui->radioTeleportForbid, lcf::rpg::MapInfo::TriState_forbid);
 
 	m_buttonGroupEscape = new QButtonGroup(this);
-	m_buttonGroupEscape->addButton(ui->radioEscapeParent);
-	m_buttonGroupEscape->setId(ui->radioEscapeParent, lcf::rpg::MapInfo::TriState_parent);
-	m_buttonGroupEscape->addButton(ui->radioEscapeAllow);
-	m_buttonGroupEscape->setId(ui->radioEscapeAllow, lcf::rpg::MapInfo::TriState_allow);
-	m_buttonGroupEscape->addButton(ui->radioEscapeForbid);
-	m_buttonGroupEscape->setId(ui->radioEscapeForbid, lcf::rpg::MapInfo::TriState_forbid);
+    m_buttonGroupEscape->addButton(ui->radioEscapeParent, lcf::rpg::MapInfo::TriState_parent);
+    m_buttonGroupEscape->addButton(ui->radioEscapeAllow, lcf::rpg::MapInfo::TriState_allow);
+    m_buttonGroupEscape->addButton(ui->radioEscapeForbid, lcf::rpg::MapInfo::TriState_forbid);
 
 	m_buttonGroupSave = new QButtonGroup(this);
-	m_buttonGroupSave->addButton(ui->radioSaveParent);
-	m_buttonGroupSave->setId(ui->radioSaveParent, lcf::rpg::MapInfo::TriState_parent);
-	m_buttonGroupSave->addButton(ui->radioSaveAllow);
-	m_buttonGroupSave->setId(ui->radioSaveAllow, lcf::rpg::MapInfo::TriState_allow);
-	m_buttonGroupSave->addButton(ui->radioSaveForbid);
-	m_buttonGroupSave->setId(ui->radioSaveForbid, lcf::rpg::MapInfo::TriState_forbid);
+    m_buttonGroupSave->addButton(ui->radioSaveParent, lcf::rpg::MapInfo::TriState_parent);
+    m_buttonGroupSave->addButton(ui->radioSaveAllow, lcf::rpg::MapInfo::TriState_allow);
+    m_buttonGroupSave->addButton(ui->radioSaveForbid, lcf::rpg::MapInfo::TriState_forbid);
 
 	for (int terrain = 0; terrain < 162; terrain++)
         m_generatorLowerLayer.push_back(TileOps::translate(terrain, UP+DOWN+LEFT+RIGHT));

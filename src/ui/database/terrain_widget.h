@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include <QButtonGroup>
 #include <QWidget>
 #include <lcf/rpg/terrain.h>
 
@@ -43,5 +44,8 @@ private:
 	ProjectData& m_project;
     lcf::rpg::Terrain *m_current = nullptr;
     lcf::rpg::Terrain m_dummy;
+    QButtonGroup* m_spriteButtonGroup;
+    QButtonGroup* m_gridButtonGroup;
+    QButtonGroup* m_backgroundButtonGroup;
 };
 

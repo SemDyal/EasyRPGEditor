@@ -35,15 +35,13 @@ AttributeWidget::AttributeWidget(ProjectData& project, QWidget *parent) :
 
 	ui->spinE->setMinimum(kMinERate);
 
-	m_buttonGroupType = new QButtonGroup(this);
-	m_buttonGroupType->addButton(ui->radioWeapon);
-	m_buttonGroupType->setId(ui->radioWeapon, 0);
-	m_buttonGroupType->addButton(ui->radioMagic);
-	m_buttonGroupType->setId(ui->radioMagic, 1);
+    m_typeButtonGroup = new QButtonGroup(this);
+    m_typeButtonGroup->addButton(ui->radioWeapon, 0);
+    m_typeButtonGroup->addButton(ui->radioMagic, 1);
 
 	LcfWidgetBinding::connect(this, ui->lineName);
 
-	LcfWidgetBinding::connect<int32_t>(this, m_buttonGroupType);
+    LcfWidgetBinding::connect<int32_t>(this, m_typeButtonGroup);
 
 	for (auto& uis : {
 			ui->spinA,
@@ -72,7 +70,7 @@ void AttributeWidget::on_currentAttributeChanged(lcf::rpg::Attribute *attribute)
 	auto& database = m_project.database();
 
 	LcfWidgetBinding::bind(ui->lineName, attribute->name);
-	LcfWidgetBinding::bind(m_buttonGroupType, attribute->type);
+    LcfWidgetBinding::bind(m_typeButtonGroup, attribute->type);
 	LcfWidgetBinding::bind(ui->spinA, attribute->a_rate);
 	LcfWidgetBinding::bind(ui->spinB, attribute->b_rate);
 	LcfWidgetBinding::bind(ui->spinC, attribute->c_rate);

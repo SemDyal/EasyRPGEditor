@@ -183,7 +183,6 @@ namespace LcfWidgetBinding {
 		LcfObjectHolder oh(data);
 		v.setValue(oh);
 		widget->setProperty("ee_data", v);
-		SignalBlocker s(widget);
 		widget->setChecked(data != 0);
 	}
 
@@ -196,7 +195,7 @@ namespace LcfWidgetBinding {
 		LcfObjectHolder oh(data);
 		v.setValue(oh);
 		widget->setProperty("ee_data", v);
-		SignalBlocker s(widget);
+        SignalBlocker s(widget);
 		widget->setValue(data);
 	}
 

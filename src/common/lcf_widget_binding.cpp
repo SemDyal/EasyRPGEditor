@@ -49,7 +49,6 @@ void LcfWidgetBinding::bind(QCheckBox* widget, bool& data) {
 	LcfObjectHolder oh(data);
 	v.setValue(oh);
 	widget->setProperty("ee_data", v);
-	SignalBlocker s(widget);
 	widget->setChecked(data);
 }
 
@@ -59,6 +58,5 @@ void LcfWidgetBinding::bind(QGroupBox* widget, bool& data) {
 	LcfObjectHolder oh(data);
 	v.setValue(oh);
 	widget->setProperty("ee_data", v);
-	SignalBlocker s(widget);
 	widget->setChecked(data);
 }

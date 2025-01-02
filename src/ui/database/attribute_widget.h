@@ -53,6 +53,6 @@ private:
 	lcf::rpg::Attribute *m_current = nullptr;
 	ProjectData& m_project;
 
-	QButtonGroup* m_buttonGroupType = nullptr;
+    QButtonGroup* m_typeButtonGroup = nullptr;
 };
 
