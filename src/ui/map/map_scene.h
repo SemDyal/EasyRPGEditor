@@ -56,7 +56,8 @@ public:
     int chipsetId() const;
     lcf::rpg::Map*map() const;
 	void setLayerData(Core::Layer layer, std::vector<short> data);
-	void setEventData(int id, const lcf::rpg::Event &data);
+    void setEvent(int id, const lcf::rpg::Event &data);
+    void deleteEvent(int id);
     emhash8::HashMap<int, lcf::rpg::Event *> *mapEvents();
 	void editMapProperties(QTreeWidgetItem *item);
 
@@ -70,6 +71,9 @@ public:
     void setTileset(int index);
     QSize setPanorama(QString name);
     inline std::shared_ptr<emhash8::HashMap<short, QPixmap>> &sharePainterTiles() { return m_painter.sharePainterTiles(); };
+    friend class UndoDraw;
+    friend class UndoEvent;
+
 
 signals:
 
@@ -141,7 +145,7 @@ private:
 					const QRect &dest_rec);
 	void stopDrawing();
 	void stopSelecting();
-    void updateArea(int x1, int y1, int x2, int y2);
+    void updateArea(int x1, int y1, int x2, int y2, bool redraw = true);
     void redrawArea(Core::Layer layer, int x1, int y1, int x2, int y2);
 	void redrawLayer(Core::Layer layer);
     void drawPen();

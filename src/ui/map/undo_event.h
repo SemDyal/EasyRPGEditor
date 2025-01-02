@@ -24,13 +24,17 @@
 class UndoEvent : public QUndoCommand
 {
 public:
-	explicit UndoEvent(lcf::rpg::Event data,
-						MapScene *scene,
-						QUndoCommand *parent = nullptr);
+    explicit UndoEvent(
+        std::optional<lcf::rpg::Event> before,
+        std::optional<lcf::rpg::Event> after,
+        MapScene *scene,
+        QUndoCommand *parent = nullptr
+    );
 	void undo();
-
+    void redo();
 private:
-	lcf::rpg::Event m_data;
+    std::optional<lcf::rpg::Event> m_before;
+    std::optional<lcf::rpg::Event> m_after;
 	MapScene* m_scene;
 };
 

@@ -17,15 +17,50 @@
 
 #include "undo_event.h"
 
-UndoEvent::UndoEvent(lcf::rpg::Event data,
-					   MapScene *scene,
-					   QUndoCommand *parent) :
+UndoEvent::UndoEvent(
+    std::optional<lcf::rpg::Event> before,
+    std::optional<lcf::rpg::Event> after,
+    MapScene *scene,
+    QUndoCommand *parent
+) :
 QUndoCommand(parent),
-m_data(data),
+m_before(before),
+m_after(after),
 m_scene(scene)
 {}
 
 void UndoEvent::undo()
 {
-	m_scene->setEventData(m_data.ID, m_data);
+    if (m_after) {
+        if (m_before) {
+            // changed
+            m_scene->setEvent(m_before.value().ID, m_before.value());
+        } else {
+            // new
+            m_scene->deleteEvent(m_after.value().ID);
+        }
+        m_scene->redrawArea(Core::UPPER, m_after.value().x, m_after.value().y, m_after.value().x, m_after.value().y);
+    } else {
+        //removed
+        m_scene->setEvent(m_before.value().ID, m_before.value());
+        m_scene->redrawArea(Core::UPPER, m_before.value().x, m_before.value().y, m_before.value().x, m_before.value().y);
+    }
+}
+
+void UndoEvent::redo()
+{
+    if (m_after) {
+        if (m_before) {
+            // changed
+            m_scene->setEvent(m_after.value().ID, m_after.value());
+        } else {
+            // new
+            m_scene->setEvent(m_after.value().ID, m_after.value());
+        }
+        m_scene->redrawArea(Core::UPPER, m_after.value().x, m_after.value().y, m_after.value().x, m_after.value().y);
+    } else {
+        //removed
+        m_scene->deleteEvent(m_before.value().ID);
+        m_scene->redrawArea(Core::UPPER, m_before.value().x, m_before.value().y, m_before.value().x, m_before.value().y);
+    }
 }

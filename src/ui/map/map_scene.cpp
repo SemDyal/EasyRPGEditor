@@ -225,22 +225,26 @@ void MapScene::setLayerData(Core::Layer layer, std::vector<short> data)
 	redrawLayer(layer);
 }
 
-// Pass the source event at this ID to delete it.
-void MapScene::setEventData(int id, const lcf::rpg::Event &data)
-{
+void MapScene::setEvent(int id, const lcf::rpg::Event &data) {
 	for (unsigned int i = 0; i < m_map->events.size(); i++) {
 		if (m_map->events[i].ID == id) {
-			if (m_map->events[i] == data) {
-				m_map->events.erase(m_map->events.begin() + i);
-				return;
-			} else {
-				m_map->events[i] = data;
-				return;
-			}
+            m_map->events[i] = data;
+            return;
 		}
 	}
 
 	m_map->events.push_back(data);
+    redrawLayer(Core::UPPER);
+}
+
+void MapScene::deleteEvent(int id) {
+    for (unsigned int i = 0; i < m_map->events.size(); i++) {
+        if (m_map->events[i].ID == id) {
+            m_map->events.erase(m_map->events.begin() + i);
+            return;
+        }
+    }
+
     redrawLayer(Core::UPPER);
 }
 
@@ -473,7 +477,7 @@ void MapScene::on_actionNewEvent()
 	{
 		m_map->events.push_back(event);
         lcf::rpg::Event backup = event;
-        m_undoStack->push(new UndoEvent(event, this));
+        m_undoStack->push(new UndoEvent(std::nullopt, event, this));
         redrawArea(Core::UPPER, event.x, event.y, event.x, event.y);
 		emit mapChanged();
 	}
@@ -483,10 +487,10 @@ void MapScene::on_actionEditEvent() {
 	std::vector<lcf::rpg::Event>::iterator ev;
 	for (ev = m_map->events.begin(); ev != m_map->events.end(); ++ev) {
 		if (_index(cur_x, cur_y) == _index(ev->x, ev->y)) {
-			lcf::rpg::Event backup = *ev;
+            lcf::rpg::Event backup = *ev;
             int result = EventDialog::edit(m_view, *ev, m_project, this);
 			if (result != QDialogButtonBox::Cancel) {
-                m_undoStack->push(new UndoEvent(backup, this));
+                m_undoStack->push(new UndoEvent(backup, *ev, this));
 				emit mapChanged();
 			}
             redrawArea(Core::UPPER, ev->x, ev->y, ev->x, ev->y);
@@ -516,7 +520,7 @@ void MapScene::on_actionPasteEvent() {
     event.y = cur_y;
 
 	m_map->events.push_back(event);
-    m_undoStack->push(new UndoEvent(event, this));
+    m_undoStack->push(new UndoEvent(std::nullopt, event, this));
     redrawArea(Core::UPPER, event.x, event.y, event.x, event.y);
 	emit mapChanged();
 }
@@ -531,7 +535,7 @@ void MapScene::on_actionDeleteEvent()
 	if (ev != m_map->events.end())
 	{
 		lcf::rpg::Event backup = *ev;
-        m_undoStack->push(new UndoEvent(backup, this));
+        m_undoStack->push(new UndoEvent(backup, std::nullopt, this));
 
 		m_map->events.erase(ev);
         redrawArea(Core::UPPER, ev->x, ev->y, ev->x, ev->y);
@@ -820,7 +824,7 @@ void MapScene::stopSelecting()
 	//cancel selection...
 }
 
-void MapScene::updateArea(int x1, int y1, int x2, int y2)
+void MapScene::updateArea(int x1, int y1, int x2, int y2, bool redraw)
 {
     //Normalize
 	if (x1 < 0)
@@ -842,8 +846,9 @@ void MapScene::updateArea(int x1, int y1, int x2, int y2)
 
         }
     }
-
-    redrawArea(core().layer(), x1, y1, x2, y2);
+    if (redraw) {
+        redrawArea(core().layer(), x1, y1, x2, y2);
+    }
 }
 
 void MapScene::redrawArea(Core::Layer layer, int x1, int y1, int x2, int y2)
@@ -990,8 +995,7 @@ void MapScene::drawRect(int next_x, int next_y)
 			else if (core().layer() == Core::UPPER)
                 m_upper[static_cast<size_t>(_index(x,y))] = m_palette->selection(x-fst_x,y-fst_y);
         }
-    updateArea(x1-1, y1-1, x2+1, y2+1);
-    // FIXME: only redraw the area that doesn't intersect
+    updateArea(x1-1, y1-1, x2+1, y2+1, false);
     x1 = fst_x > cur_x ? cur_x : fst_x;
     x2 = fst_x > cur_x ? fst_x : cur_x;
     y1 = fst_y > cur_y ? cur_y : fst_y;
