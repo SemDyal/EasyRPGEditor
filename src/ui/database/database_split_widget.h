@@ -21,6 +21,7 @@
 #include <QPoint>
 #include <QAction>
 #include <QMenu>
+#include <QInputDialog>
 #include <lcf/rpg/database.h>
 #include "ui/common/rpg_model.h"
 #include "ui_database_split_widget.h"
@@ -76,6 +77,8 @@ public:
 		return m_contentWidget;
 	}
 	void setModel(QAbstractItemModel* model);
+    // Without the Q_OBJECT macro, we have to manually specify the class for translation
+    inline QString tr(const char* text) {return QCoreApplication::translate("DatabaseSplitWidget", text);};
 
 private:
 	ProjectData& m_project;
@@ -89,7 +92,7 @@ inline DatabaseSplitWidget<LCF>::DatabaseSplitWidget(ProjectData& project, std::
 {
 	m_contentWidget = new typename RpgReflect<LCF>::widget_type(m_project, this);
 	QListView& list = *ui->list;
-	list.setModel(new RpgModel<LCF>(project, data, parent));
+    list.setModel(new RpgModel<LCF>(project, data, parent));
 	ui->splitter->addWidget(m_contentWidget);
 	ui->splitter->setStretchFactor(0, 1);
 	ui->splitter->setStretchFactor(1, 4);
@@ -109,8 +112,7 @@ inline DatabaseSplitWidget<LCF>::DatabaseSplitWidget(ProjectData& project, std::
 			return;
 		}
 
-		// FIXME: translation does not work without QCoreApplication::translate
-		auto* editAct = new QAction(QCoreApplication::translate("DatabaseSplitWidget", "Edit..."), &list);
+        auto* editAct = new QAction(tr("Edit..."), &list);
 
 		connect(editAct, &QAction::triggered, &list, [&]{
 			auto* d = new WidgetAsDialogWrapper<typename RpgReflect<LCF>::widget_type, LCF>
@@ -125,6 +127,27 @@ inline DatabaseSplitWidget<LCF>::DatabaseSplitWidget(ProjectData& project, std::
 		menu.exec(mapToGlobal(pos));
 	});
 
+    connect(ui->pushMax, &QPushButton::clicked, this, [&]() {
+        bool ok;
+        int new_size = QInputDialog::getInt(this, nullptr,
+                                             tr("Input the new slot amount:"),
+                                             list.model()->rowCount(),
+                                             1, 9999, 1, &ok);
+        if (ok) {
+            if (new_size < list.model()->rowCount()) {
+                if (QMessageBox::warning(this, nullptr,
+                                         tr("The new amount of slots is lower than the current amount of slots. The out-of-bounds slots will be removed. This action cannot be undone. Do you want to continue?"),
+                                         QMessageBox::StandardButton::Yes | QMessageBox::StandardButton::No,
+                                         QMessageBox::StandardButton::No
+                                         ) == QMessageBox::StandardButton::No) {
+                    return;
+                }
+                list.model()->removeRows(new_size, list.model()->rowCount() - new_size);
+            } else if (new_size > list.model()->rowCount()) {
+                list.model()->insertRows(list.model()->rowCount(), new_size - list.model()->rowCount());
+            }
+        }
+    });
 }
 
 template<class LCF>

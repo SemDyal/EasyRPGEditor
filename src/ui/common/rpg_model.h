@@ -38,8 +38,10 @@ public:
 	RpgModel(ProjectData& project, std::vector<LCF>& data, QObject *parent = nullptr) :
 			QAbstractListModel(parent), m_project(project), m_data(data) {}
 	int rowCount(const QModelIndex& = QModelIndex()) const override { return m_data.size(); }
+    bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
+    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
 	QVariant data(const QModelIndex &index, int role) const override;
-	std::vector<LCF>& lcfData() const {
+    std::vector<LCF>& lcfData() const {
 		return m_data;
 	}
 
@@ -69,4 +71,29 @@ QVariant RpgModel<LCF>::data(const QModelIndex &index, int role) const {
 	}
 
 	return QVariant();
+}
+
+// Small note about this: these don't correct the IDs of the remaining items.
+// This means this only really works for appending or removing from the end.
+// At the time of writing these are the only two use cases, but if you implement
+// random access insertion and deletion, you'll have to handle that to prevent bugs.
+// Oh, and *do* warn on that; lots of things in RM2K3Script rely on hardcoded location. :p
+template <class LCF>
+bool RpgModel<LCF>::insertRows(int row, int count, const QModelIndex &parent) {
+    beginInsertRows(parent, row, count);
+    for (int i = row + 1; i < row + count + 1; i++) {
+        LCF empty;
+        empty.ID = i;
+        m_data.push_back(empty);
+    }
+    endInsertRows();
+    return true;
+}
+
+template <class LCF>
+bool RpgModel<LCF>::removeRows(int row, int count, const QModelIndex &parent) {
+    beginRemoveRows(parent, row, count);
+    m_data.erase(m_data.begin() + row, m_data.begin() + row + count);
+    endRemoveRows();
+    return true;
 }
