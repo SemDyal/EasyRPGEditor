@@ -16,6 +16,7 @@
  */
 
 #include "map_scene.h"
+#include <QGuiApplication>
 #include <QAction>
 #include <QDialogButtonBox>
 #include <QGraphicsBlurEffect>

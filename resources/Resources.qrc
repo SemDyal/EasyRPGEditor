@@ -1,4 +1,7 @@
 <RCC>
+    <qresource prefix="/fonts">
+        <file>fonts/CodeNewRoman.otf</file>
+    </qresource>
     <qresource prefix="/">
         <file>app/splash.png</file>
         <file>app/easyrpg.png</file>

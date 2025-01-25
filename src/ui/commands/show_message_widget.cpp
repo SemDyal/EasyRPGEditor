@@ -22,35 +22,62 @@
 #include "lcf/rpg/eventcommand.h"
 
 ShowMessageWidget::ShowMessageWidget(ProjectData &project, QWidget *parent) :
-	EventCommandBaseWidget(project, parent),
-	ui(new Ui::ShowMessageWidget) {
+    EventCommandBaseWidget(project, parent),
+    ui(new Ui::ShowMessageWidget) {
 
-	ui->setupUi(this);
+    ui->setupUi(this);
 }
 
 ShowMessageWidget::~ShowMessageWidget() {
-	delete ui;
+    delete ui;
 }
 
 void ShowMessageWidget::setData(EventCommandList* commands) {
-	EventCommandBaseWidget::setData(commands);
+    EventCommandBaseWidget::setData(commands);
 
-	using Cmd = lcf::rpg::EventCommand::Code;
+    using Cmd = lcf::rpg::EventCommand::Code;
 
-	ui->message->append(ToQString(m_cmd->string));
+    ui->message->append(ToQString(m_cmd->string));
 
-	for (size_t i = commands->index() + 1; i < commands->size(); ++i) {
-		auto& cur_cmd = commands->commands()[i];
+    for (size_t i = commands->index() + 1; i < commands->size(); ++i) {
+        auto& cur_cmd = commands->commands()[i];
 
-		if (static_cast<Cmd>(cur_cmd.code) != Cmd::ShowMessage_2) {
-			break;
-		}
+        if (static_cast<Cmd>(cur_cmd.code) != Cmd::ShowMessage_2) {
+            break;
+        }
 
-		ui->message->append(ToQString(cur_cmd.string));
-	}
+        ui->message->append(ToQString(cur_cmd.string));
+    }
 }
 
 void ShowMessageWidget::apply() {
-	//m_commands->command().string = ToDBString(ui->message->toPlainText());
-	// FIXME: Todo
+    auto message = ui->message->toPlainText();
+    auto lines = message.split(QString("\n"));
+
+    m_commands->command().string = ToDBString(lines[0]);
+
+    using Cmd = lcf::rpg::EventCommand::Code;
+
+    size_t i = m_commands->index() + 1;
+    for (int curr_line = 1; curr_line < lines.size(); ++curr_line) {
+
+        if (i < m_commands->size()) { // Attempt to replace the next ShowMessage_2
+            auto& cur_cmd = m_commands->commands()[i];
+
+            if (static_cast<Cmd>(cur_cmd.code) != Cmd::ShowMessage_2) {
+                lcf::rpg::EventCommand cmd;
+                cmd.code = (int32_t) Cmd::ShowMessage_2;
+                cmd.indent = m_commands->command().indent;
+                m_commands->commands().insert(m_commands->commands().begin() + i, cmd);
+            }
+        } else {
+            lcf::rpg::EventCommand cmd;
+            cmd.code = (int32_t) Cmd::ShowMessage_2;
+            cmd.indent = m_commands->command().indent;
+            m_commands->commands().insert(m_commands->commands().begin() + i, cmd);
+        }
+
+        m_commands->commands()[i].string = ToDBString(lines[curr_line]);
+        ++i;
+    }
 }

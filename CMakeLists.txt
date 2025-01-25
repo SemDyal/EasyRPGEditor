@@ -428,7 +428,6 @@ target_link_libraries(${EXE_NAME}
         Qt6::Core
         Qt6::Multimedia
         Qt6::Svg
-        Qt6::QSvgIconPlugin
 )
 
 # Add resources

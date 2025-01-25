@@ -130,7 +130,7 @@ namespace
 
 	QString stringizeShowMessage(const lcf::rpg::EventCommand& com)
 	{
-		return Stringizer::tr("Show Message") + ":\n	" + ToQString(com.string);
+        return Stringizer::tr("Show Message") + ": " + ToQString(com.string);
 	}
 
 	QString stringizeMessageOptions(const lcf::rpg::EventCommand& com)
@@ -1198,7 +1198,7 @@ namespace
 
 	QString stringizeShowMessage_2(const lcf::rpg::EventCommand& com)
 	{
-		return "	" + ToQString(com.string);
+        return "\t      " + ToQString(com.string);
 	}
 
 	QString stringizeShowChoiceOption(const lcf::rpg::EventCommand& com)
