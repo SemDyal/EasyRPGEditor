@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>ActorWidget</class>
  <widget class="QWidget" name="ActorWidget">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>1008</width>
-    <height>1084</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -416,9 +408,6 @@
         <property name="text">
          <string>Face</string>
         </property>
-        <property name="alignment">
-         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
-        </property>
        </widget>
       </item>
       <item>
@@ -436,22 +425,18 @@
          </size>
         </property>
         <property name="verticalScrollBarPolicy">
-         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+         <enum>Qt::ScrollBarAsNeeded</enum>
         </property>
         <property name="horizontalScrollBarPolicy">
-         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+         <enum>Qt::ScrollBarAsNeeded</enum>
         </property>
         <property name="sizeAdjustPolicy">
-         <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContentsOnFirstShow</enum>
+         <enum>QAbstractScrollArea::AdjustIgnored</enum>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="Line" name="line_3">
-        <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
-        </property>
-       </widget>
+       <widget class="Line" name="line_3"/>
       </item>
       <item>
        <widget class="QLabel" name="label_47">
@@ -481,10 +466,10 @@
          </size>
         </property>
         <property name="verticalScrollBarPolicy">
-         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+         <enum>Qt::ScrollBarAsNeeded</enum>
         </property>
         <property name="horizontalScrollBarPolicy">
-         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+         <enum>Qt::ScrollBarAsNeeded</enum>
         </property>
        </widget>
       </item>
@@ -496,19 +481,12 @@
        </widget>
       </item>
       <item>
-       <widget class="Line" name="line_4">
-        <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
-        </property>
-       </widget>
+       <widget class="Line" name="line_4"/>
       </item>
       <item>
        <widget class="QLabel" name="label_48">
         <property name="text">
          <string>Battleset</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
         </property>
        </widget>
       </item>
@@ -527,10 +505,10 @@
          </size>
         </property>
         <property name="verticalScrollBarPolicy">
-         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+         <enum>Qt::ScrollBarAsNeeded</enum>
         </property>
         <property name="horizontalScrollBarPolicy">
-         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+         <enum>Qt::ScrollBarAsNeeded</enum>
         </property>
        </widget>
       </item>
@@ -549,187 +527,168 @@
         </item>
        </widget>
       </item>
-      <item>
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Orientation::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>411</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
      </layout>
     </widget>
    </item>
    <item row="4" column="1" rowspan="3" colspan="2">
     <widget class="QGroupBox" name="groupBox_242">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
      <property name="title">
       <string>Curves</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
-      <item row="2" column="1">
-       <widget class="QLabel" name="label_39">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_36">
         <property name="frameShape">
-         <enum>QFrame::Shape::Panel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Shadow::Sunken</enum>
+         <enum>QFrame::NoFrame</enum>
         </property>
         <property name="text">
-         <string>Defense</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignmentFlag::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QLabel" name="label_41">
-        <property name="frameShape">
-         <enum>QFrame::Shape::Panel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Shadow::Sunken</enum>
-        </property>
-        <property name="text">
-         <string>Agility</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignmentFlag::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QGraphicsView" name="graphicsAtt">
-        <property name="verticalScrollBarPolicy">
-         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
-        </property>
-        <property name="horizontalScrollBarPolicy">
-         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+         <string>Hit Points</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
        <widget class="QGraphicsView" name="graphicsHp">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>100</height>
+         </size>
+        </property>
         <property name="verticalScrollBarPolicy">
-         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+         <enum>Qt::ScrollBarAsNeeded</enum>
         </property>
         <property name="horizontalScrollBarPolicy">
-         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="label_40">
-        <property name="frameShape">
-         <enum>QFrame::Shape::Panel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Shadow::Sunken</enum>
-        </property>
-        <property name="text">
-         <string>Intelligence</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignmentFlag::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QGraphicsView" name="graphicsMp">
-        <property name="verticalScrollBarPolicy">
-         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
-        </property>
-        <property name="horizontalScrollBarPolicy">
-         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="QGraphicsView" name="graphicsAgy">
-        <property name="verticalScrollBarPolicy">
-         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
-        </property>
-        <property name="horizontalScrollBarPolicy">
-         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_36">
-        <property name="frameShape">
-         <enum>QFrame::Shape::Panel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Shadow::Sunken</enum>
-        </property>
-        <property name="text">
-         <string>Hit Points</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignmentFlag::AlignCenter</set>
+         <enum>Qt::ScrollBarAsNeeded</enum>
         </property>
        </widget>
       </item>
       <item row="5" column="0">
        <widget class="QGraphicsView" name="graphicsInt">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>100</height>
+         </size>
+        </property>
         <property name="verticalScrollBarPolicy">
-         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+         <enum>Qt::ScrollBarAsNeeded</enum>
         </property>
         <property name="horizontalScrollBarPolicy">
-         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+         <enum>Qt::ScrollBarAsNeeded</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QGraphicsView" name="graphicsDef">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>100</height>
+         </size>
+        </property>
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarAsNeeded</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAsNeeded</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QGraphicsView" name="graphicsAtt">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>100</height>
+         </size>
+        </property>
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarAsNeeded</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAsNeeded</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QGraphicsView" name="graphicsAgy">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>100</height>
+         </size>
+        </property>
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarAsNeeded</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAsNeeded</enum>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
        <widget class="QLabel" name="label_37">
         <property name="frameShape">
-         <enum>QFrame::Shape::Panel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Shadow::Sunken</enum>
+         <enum>QFrame::NoFrame</enum>
         </property>
         <property name="text">
          <string>Magic Points</string>
         </property>
-        <property name="alignment">
-         <set>Qt::AlignmentFlag::AlignCenter</set>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLabel" name="label_41">
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="text">
+         <string>Agility</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QGraphicsView" name="graphicsMp">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>100</height>
+         </size>
+        </property>
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarAsNeeded</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAsNeeded</enum>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label_38">
         <property name="frameShape">
-         <enum>QFrame::Shape::Panel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Shadow::Sunken</enum>
+         <enum>QFrame::NoFrame</enum>
         </property>
         <property name="text">
          <string>Attack</string>
         </property>
-        <property name="alignment">
-         <set>Qt::AlignmentFlag::AlignCenter</set>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLabel" name="label_39">
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="text">
+         <string>Defense</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
-       <widget class="QGraphicsView" name="graphicsDef">
-        <property name="verticalScrollBarPolicy">
-         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_40">
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
         </property>
-        <property name="horizontalScrollBarPolicy">
-         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+        <property name="text">
+         <string>Intelligence</string>
         </property>
        </widget>
       </item>
@@ -793,10 +752,10 @@
       <item>
        <widget class="QTableWidget" name="tableSkills">
         <property name="horizontalScrollBarPolicy">
-         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+         <enum>Qt::ScrollBarAsNeeded</enum>
         </property>
         <property name="editTriggers">
-         <set>QAbstractItemView::EditTrigger::DoubleClicked</set>
+         <set>QAbstractItemView::NoEditTriggers</set>
         </property>
         <property name="showDropIndicator" stdset="0">
          <bool>false</bool>
@@ -808,10 +767,10 @@
          <bool>true</bool>
         </property>
         <property name="selectionMode">
-         <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+         <enum>QAbstractItemView::NoSelection</enum>
         </property>
         <property name="selectionBehavior">
-         <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+         <enum>QAbstractItemView::SelectItems</enum>
         </property>
         <property name="sortingEnabled">
          <bool>true</bool>
@@ -914,16 +873,10 @@
          </sizepolicy>
         </property>
         <property name="frameShape">
-         <enum>QFrame::Shape::Panel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Shadow::Sunken</enum>
+         <enum>QFrame::NoFrame</enum>
         </property>
         <property name="text">
          <string>Initial = X ; Increment = Y ; Correction = Z</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignmentFlag::AlignCenter</set>
         </property>
        </widget>
       </item>

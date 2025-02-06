@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>598</width>
-    <height>228</height>
+    <height>158</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,6 +16,10 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTextEdit" name="message">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Commands:&lt;/p&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;padding: -50px&quot;&gt;&lt;li&gt;\C[n] Change &lt;span style=&quot; font-weight:700;&quot;&gt;color&lt;/span&gt; (n = 0 to 19, 0 is the default color)&lt;/li&gt;&lt;li&gt;\S[n] Set the&lt;span style=&quot; font-weight:700;&quot;&gt; text speed&lt;/span&gt; to n, from 1 (fastest) to 20 (slowest)&lt;/li&gt;&lt;li&gt;\N[n] Show the &lt;span style=&quot; font-weight:700;&quot;&gt;name&lt;/span&gt; of the n-th hero in the party&lt;/li&gt;&lt;li&gt;\V[n] Show the value of the n-th &lt;span style=&quot; font-weight:700;&quot;&gt;variable&lt;/span&gt;&lt;/li&gt;&lt;li&gt;\$ Show the current &lt;span style=&quot; font-weight:700;&quot;&gt;money&lt;/span&gt; in a separate box&lt;/li&gt;&lt;li&gt;\! &lt;span style=&quot; font-weight:700;&quot;&gt;Pause&lt;/span&gt; the text, waits for the player press enter to show the rest&lt;/li&gt;&lt;li&gt;\. &lt;span style=&quot; font-weight:700;&quot;&gt;Short pause&lt;/span&gt; before the rest of the text&lt;/li&gt;&lt;li&gt;\| &lt;span style=&quot; font-weight:700;&quot;&gt;Long pause&lt;/span&gt; before the rest of the text&lt;/li&gt;&lt;li&gt;\^ &lt;span style=&quot; font-weight:700;&quot;&gt;Ends&lt;/span&gt; the message without pressing enter&lt;/li&gt;&lt;li&gt;\&amp;lt; \&amp;gt; Display &lt;span style=&quot; font-weight:700;&quot;&gt;instantly&lt;/span&gt; the message between \&amp;gt; and \&amp;lt;&lt;/li&gt;&lt;li&gt;\\ Show '\'&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;\_ Show half a space&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="acceptRichText">
       <bool>false</bool>
      </property>
@@ -24,7 +28,7 @@
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>FIXME: Saving not supported yet!</string>
+      <string>TODO: Limit message to 3 lines</string>
      </property>
     </widget>
    </item>

@@ -17,25 +17,28 @@
 
 #pragma once
 
-#include <QDialog>
-#include <lcf/rpg/eventcommand.h>
+#include <ui/event/event_command_base_widget.h>
+#include <QButtonGroup>
 
 namespace Ui {
 class ShowChoicesWidget;
 }
 
-class ShowChoicesWidget : public QDialog
+class ShowChoicesWidget : public EventCommandBaseWidget
 {
 	Q_OBJECT
 
 public:
-	explicit ShowChoicesWidget(QWidget *parent, lcf::rpg::EventCommand &cmd);
+    explicit ShowChoicesWidget(ProjectData& project, QWidget *parent);
 	~ShowChoicesWidget() override;
+
+    void setData(EventCommandList* commands) override;
+    void apply();
 
 private slots:
 
 private:
-	Ui::ShowChoicesWidget *ui;
-	lcf::rpg::EventCommand &cmd;
+    Ui::ShowChoicesWidget *ui;
+    QButtonGroup group;
 };
 

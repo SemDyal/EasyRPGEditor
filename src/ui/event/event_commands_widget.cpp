@@ -32,9 +32,12 @@ EventCommandsWidget::EventCommandsWidget(QWidget* parent) :
     QTreeWidget(parent)
 {
     setHeaderHidden(true);
+    setIndentation(10);
+    setStyleSheet("QTreeView::item {margin: 0px; padding: 0px;}");
+    setAlternatingRowColors(true);
 
-    QFontDatabase::addApplicationFont(":/fonts/fonts/CodeNewRoman.otf");
-    QFont monospace("CodeNewRoman", 10, QFont::Normal);
+    QFontDatabase::addApplicationFont(":/fonts/fonts/SourceCodePro-Regular.ttf");
+    QFont monospace("Source Code Pro", 10, QFont::Monospace);
     setFont(monospace);
 
     setContextMenuPolicy(Qt::CustomContextMenu);
@@ -69,32 +72,13 @@ WidgetAsDialogWrapper<T, lcf::rpg::EventCommand>* make_evt_dialog(ProjectData* p
 }
 
 template<typename T>
-WidgetAsDialogWrapper<T, EventCommandList>* make_complex_evt_dialog(ProjectData* prj, EventCommandList& commands, EventCommandsWidget* self) {
+WidgetAsDialogWrapper<T, EventCommandList>* make_complex_evt(ProjectData* prj, EventCommandList& commands, EventCommandsWidget* self) {
     return new WidgetAsDialogWrapper<T, EventCommandList>(*prj, commands, self);
 }
 
-bool is_editable(lcf::rpg::EventCommand::Code code) {
+bool is_selectable(lcf::rpg::EventCommand::Code code) {
     using Cmd = lcf::rpg::EventCommand::Code;
     switch (code)	{
-    case Cmd::EnterExitVehicle:
-    case Cmd::ProceedWithMovement:
-    case Cmd::HaltAllMovement:
-    case Cmd::MemorizeBGM:
-    case Cmd::PlayMemorizedBGM:
-    case Cmd::OpenSaveMenu:
-    case Cmd::OpenMainMenu:
-    case Cmd::Loop:
-    case Cmd::BreakLoop:
-    case Cmd::EndEventProcessing:
-    case Cmd::EraseEvent:
-    case Cmd::GameOver:
-    case Cmd::ReturntoTitleScreen:
-    case Cmd::OpenLoadMenu:
-    case Cmd::ExitGame:
-    case Cmd::ToggleAtbMode:
-    case Cmd::ToggleFullscreen:
-    case Cmd::OpenVideoOptions:
-    case Cmd::TerminateBattle:
     case Cmd::ShowChoiceOption:
     case Cmd::ShowChoiceEnd:
     case Cmd::ElseBranch:
@@ -207,10 +191,10 @@ void EventCommandsWidget::editEvent(QTreeWidgetItem* item, int column) {
     //case Cmd::EnableCombo: evt_dialog.reset(make_evt_dialog<EnableComboWidget>(m_project, cmd, this)); break;
     //case Cmd::ChangeClass: evt_dialog.reset(make_evt_dialog<ChangeClassWidget>(m_project, cmd, this)); break;
     //case Cmd::ChangeBattleCommands: evt_dialog.reset(make_evt_dialog<ChangeBattleCommandsWidget>(m_project, cmd, this)); break;
-    case Cmd::ShowMessage: evt_dialog.reset(make_complex_evt_dialog<ShowMessageWidget>(m_project, evt_lst, this)); break;
+    case Cmd::ShowMessage: evt_dialog.reset(make_complex_evt<ShowMessageWidget>(m_project, evt_lst, this)); break;
     case Cmd::MessageOptions: evt_dialog.reset(make_evt_dialog<MessageOptionsWidget>(m_project, cmd, this)); break;
     //case Cmd::ChangeFaceGraphic: evt_dialog.reset(make_evt_dialog<ChangeFaceGraphicWidget>(m_project, cmd, this)); break;
-    //case Cmd::ShowChoice: evt_dialog.reset(make_evt_dialog<ShowChoiceWidget>(m_project, cmd, this)); break;
+    case Cmd::ShowChoice: evt_dialog.reset(make_complex_evt<ShowChoicesWidget>(m_project, evt_lst, this)); break;
     //case Cmd::InputNumber: evt_dialog.reset(make_evt_dialog<InputNumberWidget>(m_project, cmd, this)); break;
     case Cmd::ControlSwitches: evt_dialog.reset(make_evt_dialog<SwitchOperationsWidget>(m_project, cmd, this)); break;
     case Cmd::ControlVars: evt_dialog.reset(make_evt_dialog<VariableOperationsWidget>(m_project, cmd, this)); break;
@@ -428,15 +412,15 @@ void EventCommandsWidget::refreshList() {
         cmd.indent = indent;
 
         QString display = "";
-        if (is_editable(static_cast<Cmd>(cmd.code))) {
-            display = "<> ";
+        if (is_selectable(static_cast<Cmd>(cmd.code))) {
+            display = "◆ ";
         } else {
-            display = ":  ";
+            display = "◇ ";
         }
         auto* item = new QTreeWidgetItem({display + Stringizer::stringize(cmd), QString::number(i)});
         item->setToolTip(0, tr("Line") + ": " + QString::number(i + 1));
         item->setData(0, Qt::UserRole, QVariant::fromValue(reinterpret_cast<void*>(&cmd)));
-        if (!is_editable(static_cast<Cmd>(cmd.code))) {
+        if (!is_selectable(static_cast<Cmd>(cmd.code))) {
             item->setFlags(Qt::ItemIsEnabled);
         }
 
@@ -465,7 +449,7 @@ void EventCommandsWidget::refreshList() {
         prev_indent = indent;
     }
 
-    auto* item = new QTreeWidgetItem({"<> ", QString::number(m_commands->size())});
+    auto* item = new QTreeWidgetItem({"◆ ", QString::number(m_commands->size())});
     item->setToolTip(0, tr("Line") + ": " + QString::number(m_commands->size()));
     item->setData(0, Qt::UserRole, QVariant::fromValue(nullptr));
     item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);

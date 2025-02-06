@@ -54,7 +54,7 @@ void ShowMessageWidget::apply() {
     auto message = ui->message->toPlainText();
     auto lines = message.split(QString("\n"));
 
-    m_commands->command().string = ToDBString(lines[0]);
+    m_cmd->string = ToDBString(lines[0]);
 
     using Cmd = lcf::rpg::EventCommand::Code;
 

@@ -7,13 +7,233 @@
     <x>0</x>
     <y>0</y>
     <width>949</width>
-    <height>631</height>
+    <height>636</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QGroupBox {
+    border: 1px solid silver;
+    border-radius: 6px;
+    margin-top: 10px;
+    padding-top: 5px;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 7px;
+    padding: 2px 5px 0px 5px;
+}
+
+QCheckBox, QSpinBox {
+	margin: 0px;
+}
+</string>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="2" column="0" rowspan="2">
+    <widget class="QGroupBox" name="groupBox_5">
+     <property name="title">
+      <string>Event Graphic</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_10">
+      <property name="leftMargin">
+       <number>6</number>
+      </property>
+      <property name="topMargin">
+       <number>6</number>
+      </property>
+      <property name="rightMargin">
+       <number>6</number>
+      </property>
+      <property name="bottomMargin">
+       <number>6</number>
+      </property>
+      <item>
+       <widget class="QGraphicsView" name="graphicsSprite">
+        <property name="minimumSize">
+         <size>
+          <width>52</width>
+          <height>68</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>52</width>
+          <height>68</height>
+         </size>
+        </property>
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_6">
+        <item>
+         <widget class="QCheckBox" name="checkTransparent">
+          <property name="text">
+           <string>Trans</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushSetSprite">
+          <property name="text">
+           <string>Set</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QGroupBox" name="groupBox_10">
+     <property name="title">
+      <string>Move Speed</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <property name="leftMargin">
+       <number>6</number>
+      </property>
+      <property name="topMargin">
+       <number>6</number>
+      </property>
+      <property name="rightMargin">
+       <number>6</number>
+      </property>
+      <property name="bottomMargin">
+       <number>6</number>
+      </property>
+      <item>
+       <widget class="QComboBox" name="comboMoveSpeed"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QGroupBox" name="groupBox_9">
+     <property name="title">
+      <string>Animation type</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_4">
+      <property name="leftMargin">
+       <number>6</number>
+      </property>
+      <property name="topMargin">
+       <number>6</number>
+      </property>
+      <property name="rightMargin">
+       <number>6</number>
+      </property>
+      <property name="bottomMargin">
+       <number>6</number>
+      </property>
+      <item>
+       <widget class="QComboBox" name="comboAnimationType"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="2" rowspan="7">
+    <widget class="QGroupBox" name="groupBox_4">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>3</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Event Commands</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_11">
+      <item>
+       <widget class="EventCommandsWidget" name="commands" native="true"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>44</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="1">
+    <widget class="QGroupBox" name="groupBox_7">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>1</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Trigger Condition</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_7">
+      <property name="leftMargin">
+       <number>6</number>
+      </property>
+      <property name="topMargin">
+       <number>6</number>
+      </property>
+      <property name="rightMargin">
+       <number>6</number>
+      </property>
+      <property name="bottomMargin">
+       <number>6</number>
+      </property>
+      <item>
+       <widget class="QComboBox" name="comboCondition"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QGroupBox" name="groupBox_8">
+     <property name="title">
+      <string>Event Layer</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_5">
+      <property name="leftMargin">
+       <number>6</number>
+      </property>
+      <property name="topMargin">
+       <number>6</number>
+      </property>
+      <property name="rightMargin">
+       <number>6</number>
+      </property>
+      <property name="bottomMargin">
+       <number>6</number>
+      </property>
+      <item>
+       <widget class="QComboBox" name="comboLayer"/>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkOverlapForbidden">
+        <property name="text">
+         <string>Forbid overlap</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
    <item row="0" column="0" colspan="2">
     <widget class="QGroupBox" name="groupBox_3">
      <property name="title">
@@ -229,147 +449,7 @@
      </layout>
     </widget>
    </item>
-   <item row="0" column="2" rowspan="6">
-    <widget class="QGroupBox" name="groupBox_4">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>3</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="title">
-      <string>Event Commands</string>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_11">
-      <item>
-       <widget class="EventCommandsWidget" name="commands" native="true"/>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="1" column="0" rowspan="2">
-    <widget class="QGroupBox" name="groupBox_5">
-     <property name="title">
-      <string>Event Graphic</string>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_10">
-      <property name="leftMargin">
-       <number>6</number>
-      </property>
-      <property name="topMargin">
-       <number>6</number>
-      </property>
-      <property name="rightMargin">
-       <number>6</number>
-      </property>
-      <property name="bottomMargin">
-       <number>6</number>
-      </property>
-      <item>
-       <widget class="QGraphicsView" name="graphicsSprite">
-        <property name="minimumSize">
-         <size>
-          <width>52</width>
-          <height>68</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>52</width>
-          <height>68</height>
-         </size>
-        </property>
-        <property name="verticalScrollBarPolicy">
-         <enum>Qt::ScrollBarAlwaysOff</enum>
-        </property>
-        <property name="horizontalScrollBarPolicy">
-         <enum>Qt::ScrollBarAlwaysOff</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_6">
-        <item>
-         <widget class="QCheckBox" name="checkTransparent">
-          <property name="text">
-           <string>Trans</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushSetSprite">
-          <property name="text">
-           <string>Set</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QGroupBox" name="groupBox_7">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>1</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="title">
-      <string>Trigger Condition</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_7">
-      <property name="leftMargin">
-       <number>6</number>
-      </property>
-      <property name="topMargin">
-       <number>6</number>
-      </property>
-      <property name="rightMargin">
-       <number>6</number>
-      </property>
-      <property name="bottomMargin">
-       <number>6</number>
-      </property>
-      <item>
-       <widget class="QComboBox" name="comboCondition"/>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QGroupBox" name="groupBox_8">
-     <property name="title">
-      <string>Event Layer</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_5">
-      <property name="leftMargin">
-       <number>6</number>
-      </property>
-      <property name="topMargin">
-       <number>6</number>
-      </property>
-      <property name="rightMargin">
-       <number>6</number>
-      </property>
-      <property name="bottomMargin">
-       <number>6</number>
-      </property>
-      <item>
-       <widget class="QComboBox" name="comboLayer"/>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkOverlapForbidden">
-        <property name="text">
-         <string>Forbid overlap</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="3" column="0" rowspan="2">
+   <item row="4" column="0" rowspan="2">
     <widget class="QGroupBox" name="groupBox_6">
      <property name="title">
       <string>Movement Type</string>
@@ -424,55 +504,7 @@
      </layout>
     </widget>
    </item>
-   <item row="3" column="1">
-    <widget class="QGroupBox" name="groupBox_9">
-     <property name="title">
-      <string>Animation type</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_4">
-      <property name="leftMargin">
-       <number>6</number>
-      </property>
-      <property name="topMargin">
-       <number>6</number>
-      </property>
-      <property name="rightMargin">
-       <number>6</number>
-      </property>
-      <property name="bottomMargin">
-       <number>6</number>
-      </property>
-      <item>
-       <widget class="QComboBox" name="comboAnimationType"/>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="4" column="1">
-    <widget class="QGroupBox" name="groupBox_10">
-     <property name="title">
-      <string>Move Speed</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_3">
-      <property name="leftMargin">
-       <number>6</number>
-      </property>
-      <property name="topMargin">
-       <number>6</number>
-      </property>
-      <property name="rightMargin">
-       <number>6</number>
-      </property>
-      <property name="bottomMargin">
-       <number>6</number>
-      </property>
-      <item>
-       <widget class="QComboBox" name="comboMoveSpeed"/>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="5" column="0">
+   <item row="6" column="0">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -485,15 +517,15 @@
      </property>
     </spacer>
    </item>
-   <item row="5" column="1">
-    <spacer name="verticalSpacer_2">
+   <item row="1" column="1">
+    <spacer name="verticalSpacer_3">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>44</height>
+       <height>40</height>
       </size>
      </property>
     </spacer>
