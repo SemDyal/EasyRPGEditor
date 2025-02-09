@@ -23,8 +23,6 @@
 RpgPainter::RpgPainter(QString chipset) {
     setChipset(chipset);
     m_eventCache = &core().getEventCache();
-    setRenderHint(QPainter::Antialiasing, false);
-    setRenderHint(QPainter::LosslessImageRendering, false);
 }
 
 enum TileOverviewMode
@@ -48,6 +46,8 @@ void RpgPainter::setChipset(QString name) {
 void RpgPainter::beginPainting(QPixmap &dest) {
     this->begin(&dest);
     this->setPen(Qt::yellow);
+    setRenderHint(QPainter::Antialiasing, false);
+    setRenderHint(QPainter::LosslessImageRendering, false);
 }
 
 void RpgPainter::renderTile(const short &tile_id, const QRect &dest_rect) {
