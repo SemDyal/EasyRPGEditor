@@ -80,4 +80,11 @@ void ShowMessageWidget::apply() {
         m_commands->commands()[i].string = ToDBString(lines[curr_line]);
         ++i;
     }
+
+    int after = m_commands->index() + lines.length();
+    auto& cur_cmd = m_commands->commands()[after];
+    while (static_cast<Cmd>(cur_cmd.code) == Cmd::ShowMessage_2) {
+        m_commands->commands().erase(m_commands->commands().begin() + after);
+        cur_cmd = m_commands->commands()[after];
+    }
 }

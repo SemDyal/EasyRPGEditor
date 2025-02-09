@@ -17,26 +17,31 @@
 
 #pragma once
 
-#include <QDialog>
-#include <lcf/rpg/eventcommand.h>
+#include <ui/event/event_command_base_widget.h>
+#include "ui/viewer/faceset_graphics_item.h"
 
 namespace Ui {
 class FaceGraphicsWidget;
 }
 
-class FaceGraphicsWidget : public QDialog
+class FaceGraphicsWidget : public EventCommandBaseWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	explicit FaceGraphicsWidget(QWidget *parent, lcf::rpg::EventCommand &cmd);
-	~FaceGraphicsWidget() override;
+    explicit FaceGraphicsWidget(ProjectData& project, QWidget *parent);
+    ~FaceGraphicsWidget() override;
 
-private slots:
-
+    void faceSetReset();
+    void setData(lcf::rpg::EventCommand* cmd) override;
+    void apply();
 
 private:
-	Ui::FaceGraphicsWidget *ui;
-	lcf::rpg::EventCommand &cmd;
+    void faceSetClicked();
+
+    FaceSetGraphicsItem *m_faceItem = nullptr;
+    QString m_file;
+
+    Ui::FaceGraphicsWidget *ui;
 };
 

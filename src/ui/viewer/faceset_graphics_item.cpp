@@ -32,12 +32,21 @@ FaceSetGraphicsItem::FaceSetGraphicsItem(ProjectData& project, const QPixmap pix
 }
 
 QRect FaceSetGraphicsItem::faceRect() const {
-	return {
-			(m_index % 4) * 48,
-			m_index / 4 * 48,
-			48,
-			48
-	};
+    if (m_flip) {
+        return {
+            (3 -(m_index % 4)) * 48,
+            m_index / 4 * 48,
+            48,
+            48
+        };
+    } else {
+        return {
+                (m_index % 4) * 48,
+                m_index / 4 * 48,
+                48,
+                48
+        };
+    }
 }
 
 QRectF FaceSetGraphicsItem::boundingRect() const {
@@ -45,7 +54,7 @@ QRectF FaceSetGraphicsItem::boundingRect() const {
 }
 
 void FaceSetGraphicsItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) {
-	painter->drawPixmap(boundingRect(), m_image, faceRect());
+    painter->drawPixmap(boundingRect(), m_image, faceRect());
 }
 
 void FaceSetGraphicsItem::refresh(const lcf::rpg::Actor& actor) {
@@ -57,14 +66,25 @@ void FaceSetGraphicsItem::refresh(QString filename, int index) {
 		m_filename = filename;
 		QString path = m_project.project().findFile(FACESET, filename, FileFinder::FileType::Image);
 		if (!path.isEmpty()) {
-			m_image = ImageLoader::Load(path);
+            m_image = ImageLoader::Load(path);
 		} else {
 			m_image = QPixmap(48, 48);
 			m_image.fill(QColor(255, 255, 255, 0));
 		}
 	}
 	setIndex(index);
+    m_image = m_flip ? m_image.transformed(QTransform::fromScale(-1.0, 1.0)) : m_image;
 	update();
+}
+
+bool FaceSetGraphicsItem::isFlipped() const {
+    return m_flip;
+}
+
+void FaceSetGraphicsItem::setFlipped(bool flipped) {
+    m_flip = flipped;
+    m_image = m_image.transformed(QTransform::fromScale(-1.0, 1.0));
+    update();
 }
 
 int FaceSetGraphicsItem::index() const {
