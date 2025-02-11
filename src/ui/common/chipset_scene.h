@@ -15,27 +15,22 @@
  * along with EasyRPG Editor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "chipset_widget.h"
-#include "common/dbstring.h"
-#include "ui_chipset_widget.h"
+#pragma once
 
-ChipSetWidget::ChipSetWidget(ProjectData& project, QWidget *parent) :
-	QWidget(parent),
-	ui(new Ui::ChipSetWidget),
-	m_project(project)
+#include <QGraphicsScene>
+#include <qgraphicsitem.h>
+#include <src/ui/rpg_painter.h>
+
+class ChipsetScene : public QGraphicsScene
 {
-	ui->setupUi(this);
-}
+public:
+    ChipsetScene(QString chipset_name = "", QObject *parent = nullptr);
 
-ChipSetWidget::~ChipSetWidget() {
-	delete ui;
-}
-
-void ChipSetWidget::setData(lcf::rpg::Chipset* chipset) {
-    lower_scene.set_chipset(ToQString(chipset->chipset_name));
-    lower_scene.draw_overview(RpgPainter::ALL_LOWER);
-    ui->lowerGraphicsView->setScene(&lower_scene);
-    upper_scene.force_chipset(lower_scene.share_chipset());
-    upper_scene.draw_overview(RpgPainter::ALL_UPPER);
-    ui->upperGraphicsView->setScene(&upper_scene);
-}
+    void set_chipset(QString name);
+    void force_chipset(QPixmap chipset);
+    void draw_overview(RpgPainter::TileOverviewMode mode);
+    QPixmap& share_chipset();
+private:
+    QPixmap m_chipset;
+    QGraphicsPixmapItem item;
+};

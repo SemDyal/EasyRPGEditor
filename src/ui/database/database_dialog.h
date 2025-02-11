@@ -32,7 +32,7 @@
 #include "battle_animation2_widget.h"
 #include "battle_screen_widget.h"
 #include "terrain_widget.h"
-#include "chipset_widget.h"
+#include "chipset/chipset_widget.h"
 #include "vocabulary_widget.h"
 #include "system_widget.h"
 #include "system2_widget.h"

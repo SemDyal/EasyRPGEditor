@@ -17,32 +17,20 @@
 
 #pragma once
 
-#include "ui/common/tileset_scene.h"
-#include <QWidget>
-#include <lcf/rpg/chipset.h>
-
-class ProjectData;
-
-namespace Ui {
-class ChipSetWidget;
+namespace Chipset {
+    enum EditMode {
+        EDIT_MODE_TERRAIN = 0,
+        EDIT_MODE_PASSABILITY = 1,
+        EDIT_MODE_EDGES = 2,
+        EDIT_MODE_COUNTER = 3
+    };
+    enum PassableFlag {
+        Down		= 0x01,
+        Left		= 0x02,
+        Right		= 0x04,
+        Up      	= 0x08,
+        Above		= 0x10,
+        Wall		= 0x20,
+        Counter		= 0x40
+    };
 }
-
-class ChipSetWidget : public QWidget
-{
-	Q_OBJECT
-
-public:
-	using value_type = lcf::rpg::Chipset;
-
-	explicit ChipSetWidget(ProjectData& project, QWidget *parent = nullptr);
-	~ChipSetWidget();
-
-	void setData(lcf::rpg::Chipset* chipset);
-
-private:
-	Ui::ChipSetWidget *ui;
-	ProjectData& m_project;
-    TilesetScene lower_scene;
-    TilesetScene upper_scene;
-};
-

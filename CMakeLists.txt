@@ -176,8 +176,8 @@ set(EDITOR_SOURCES
 	src/ui/common/system_color_combobox.h
 	src/ui/common/widget_as_dialog_model_wrapper.h
 	src/ui/common/widget_as_dialog_wrapper.h
-	src/ui/common/tileset_scene.h
-	src/ui/common/tileset_scene.cpp
+        src/ui/common/chipset_scene.h
+        src/ui/common/chipset_scene.cpp
 	src/ui/database/actor_delegate.cpp
 	src/ui/database/actor_delegate.h
 	src/ui/database/actor_widget.cpp
@@ -195,9 +195,6 @@ set(EDITOR_SOURCES
 	src/ui/database/battle_screen_widget.cpp
 	src/ui/database/battle_screen_widget.h
 	src/ui/database/battle_screen_widget.ui
-	src/ui/database/chipset_widget.cpp
-	src/ui/database/chipset_widget.h
-	src/ui/database/chipset_widget.ui
 	src/ui/database/class_widget.cpp
 	src/ui/database/class_widget.h
 	src/ui/database/class_widget.ui
@@ -237,6 +234,11 @@ set(EDITOR_SOURCES
 	src/ui/database/terrain_widget.cpp
 	src/ui/database/terrain_widget.h
 	src/ui/database/terrain_widget.ui
+        src/ui/database/chipset/chipset_edit_scene.h
+        src/ui/database/chipset/chipset_edit_scene.cpp
+        src/ui/database/chipset/chipset_widget.cpp
+        src/ui/database/chipset/chipset_widget.h
+        src/ui/database/chipset/chipset_widget.ui
 	src/ui/database/variable_widget.cpp
 	src/ui/database/variable_widget.h
 	src/ui/database/variable_widget.ui
@@ -343,7 +345,8 @@ if(APPLE)
 else()
 	# Executable
 	set(EXE_NAME ${PROJECT_NAME})
-        add_executable(${EXE_NAME} WIN32 "src/main.cpp" ${EDITOR_SOURCES})
+        add_executable(${EXE_NAME} WIN32 "src/main.cpp" ${EDITOR_SOURCES}
+            src/ui/database/chipset/chipset_edit_mode.h)
 	if(WIN32)
 		# Open console for Debug builds
 		if(CMAKE_BUILD_TYPE MATCHES "Debug")

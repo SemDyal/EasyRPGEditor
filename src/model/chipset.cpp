@@ -16,7 +16,7 @@
  */
 
 #include "chipset.h"
-#include "ui/database/chipset_widget.h"
+#include "ui/database/chipset/chipset_widget.h"
 
 ChipsetModel::ChipsetModel(ProjectData& project, lcf::rpg::Chipset& data) :
 	RpgBase(project), m_data(data) {

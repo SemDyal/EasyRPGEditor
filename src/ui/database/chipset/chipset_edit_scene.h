@@ -17,20 +17,27 @@
 
 #pragma once
 
-#include <QGraphicsScene>
-#include <qgraphicsitem.h>
-#include <src/ui/rpg_painter.h>
+#include "chipset_edit_mode.h"
+#include <ui/common/chipset_scene.h>
+#include "core.h"
 
-class TilesetScene : public QGraphicsScene
+class ChipsetEditScene : public ChipsetScene
 {
-public:
-    TilesetScene(QString chipset_name = "", QObject *parent = nullptr);
+    Q_OBJECT
 
-    void set_chipset(QString name);
-    void force_chipset(QPixmap chipset);
-    void draw_overview(RpgPainter::TileOverviewMode mode);
-    QPixmap& share_chipset();
+public:
+    explicit ChipsetEditScene(Core::Layer layer, lcf::rpg::Chipset *data = nullptr, QObject *parent = nullptr);
+    void setData(lcf::rpg::Chipset *data);
+public slots:
+    void setEditMode(int editMode);
+    void setTerrain(QModelIndex terrain, QModelIndex _);
+protected:
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
+    void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
 private:
-    QPixmap m_chipset;
-    QGraphicsPixmapItem item;
+    lcf::rpg::Chipset *m_data;
+    Chipset::EditMode m_editMode;
+    Core::Layer m_layer;
+    QGraphicsPixmapItem m_overlay;
+    int16_t m_terrain = 1;
 };
