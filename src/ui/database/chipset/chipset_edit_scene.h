@@ -34,10 +34,18 @@ public slots:
 protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);
 private:
     lcf::rpg::Chipset *m_data;
     Chipset::EditMode m_editMode;
     Core::Layer m_layer;
     QGraphicsPixmapItem m_overlay;
     int16_t m_terrain = 1;
+
+    QIcon m_pass_o = QIcon(":/passability/passability_o");
+    QIcon m_pass_x = QIcon(":/passability/passability_x");
+    QIcon m_pass_square = QIcon(":/passability/passability_square");
+    QIcon m_pass_star = QIcon(":/passability/passability_star");
+    QIcon m_counter_on = QIcon(":/passability/passability_counter_on");
+    QIcon m_counter_off = QIcon(":/passability/passability_counter_off");
 };

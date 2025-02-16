@@ -19,6 +19,7 @@
 #include "chipset_widget.h"
 #include "common/dbstring.h"
 #include <QGraphicsSceneMouseEvent>
+#include <QSvgRenderer>
 #include <QTextCharFormat>
 #include <qgraphicseffect.h>
 
@@ -27,7 +28,10 @@ ChipsetEditScene::ChipsetEditScene(Core::Layer layer, lcf::rpg::Chipset *data, Q
 {
     m_layer = layer;
     m_data = data;
+    QGraphicsOpacityEffect* opacity = new QGraphicsOpacityEffect;
+    opacity->setOpacity(0.90);
     addItem(&m_overlay);
+    m_overlay.setGraphicsEffect(opacity);
     if (layer == Core::LOWER) {
         m_editMode = Chipset::EDIT_MODE_TERRAIN;
     } else {
@@ -82,10 +86,49 @@ void ChipsetEditScene::setEditMode(int editMode) {
             }
         }
     } else if (editMode == Chipset::EDIT_MODE_PASSABILITY) {
+        for (uint8_t i : m_layer == Core::LOWER ? m_data->passable_data_lower : m_data->passable_data_upper) {
+            if ((i >> 5) & 1) {
+                painter.drawPixmap(x, y, m_pass_square.pixmap(32));
+            } else if ((i >> 4) & 1) {
+                painter.drawPixmap(x, y, m_pass_star.pixmap(32));
+            } else if (!(i & 0b1111)) {
+                painter.drawPixmap(x, y, m_pass_x.pixmap(32));
+            } else {
+                painter.drawPixmap(x, y, m_pass_o.pixmap(32));
+            }
+            x += 32;
+            if (x == 192) {
+                x = 0;
+                y += 32;
+            }
+        }
     } else if (editMode == Chipset::EDIT_MODE_EDGES) {
+        for (uint8_t i : m_layer == Core::LOWER ? m_data->passable_data_lower : m_data->passable_data_upper) {
+            // down
+            painter.drawPixmap(x, y, i & 1 ? m_counter_on.pixmap(32) : m_counter_off.pixmap(32));
+            // left
+            painter.drawPixmap(x, y, (i >> 1) & 1 ? m_counter_on.pixmap(32) : m_counter_off.pixmap(32));
+            // right
+            painter.drawPixmap(x, y, (i >> 2) & 1 ? m_counter_on.pixmap(32) : m_counter_off.pixmap(32));
+            // up
+            painter.drawPixmap(x, y, (i >> 3) & 1 ? m_counter_on.pixmap(32) : m_counter_off.pixmap(32));
+            x += 32;
+            if (x == 192) {
+                x = 0;
+                y += 32;
+            }
+        }
     } else if (editMode == Chipset::EDIT_MODE_COUNTER) {
         if (m_layer == Core::LOWER) {
             throw "ChipsetEditScene: Cannot set counter on lower layer!";
+        }
+        for (uint8_t i : m_data->passable_data_upper) {
+            painter.drawPixmap(x, y, (i >> 6) & 1 ? m_counter_on.pixmap(32) : m_counter_off.pixmap(32));
+            x += 32;
+            if (x == 192) {
+                x = 0;
+                y += 32;
+            }
         }
     }
     painter.end();
@@ -115,6 +158,37 @@ void ChipsetEditScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) {
             setEditMode(Chipset::EDIT_MODE_TERRAIN);
         }
     } else if (m_editMode == Chipset::EDIT_MODE_PASSABILITY) {
+        int offset = ((int)mouseEvent->scenePos().y() / 32) * 6 + ((int)mouseEvent->scenePos().x() / 32) % 6;
+        uint8_t &i = m_layer == Core::LOWER ? m_data->passable_data_lower[offset] : m_data->passable_data_upper[offset];
+        if (mouseEvent->buttons() == Qt::LeftButton) {
+            if ((i >> 5) & 1) { // square to o
+                i = 0b1111;
+            } else if ((i >> 4) & 1) { // star to square/o
+                if (m_layer == Core::LOWER && 6 <= offset && offset <= 17) {
+                    i = 0b100000;
+                } else {
+                    i = 0b1111;
+                }
+            } else if (!(i & 0b1111)) { // x to star
+                i = 0b10000;
+            } else { // o to x
+                i = 0;
+            }
+        } else if (mouseEvent->buttons() == Qt::RightButton) {
+            if ((i >> 5) & 1) { // square to star
+                i = 0b10000;
+            } else if ((i >> 4) & 1) { // star to x
+                i = 0;
+            } else if (!(i & 0b1111)) { // x to o
+                i = 0b1111;
+            } else { // o to square/star
+                if (m_layer == Core::LOWER && 6 <= offset && offset <= 17) {
+                    i = 0b100000;
+                } else {
+                    i = 0b10000;
+                }
+            }
+        }
     } else if (m_editMode == Chipset::EDIT_MODE_EDGES) {
     } else if (m_editMode == Chipset::EDIT_MODE_COUNTER) {
         int offset = ((int)mouseEvent->scenePos().y() / 32) * 6 + ((int)mouseEvent->scenePos().x() / 32) % 6;
@@ -123,4 +197,8 @@ void ChipsetEditScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) {
         }
     }
     setEditMode(m_editMode);
+}
+
+void ChipsetEditScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent) {
+    ChipsetEditScene::mousePressEvent(mouseEvent);
 }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="32"
+   height="32"
+   viewBox="0 0 8.466667 8.4666668"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
+   sodipodi:docname="passability_star.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showguides="true"
+     inkscape:zoom="11.313709"
+     inkscape:cx="16.617009"
+     inkscape:cy="11.402096"
+     inkscape:window-width="1282"
+     inkscape:window-height="1219"
+     inkscape:window-x="460"
+     inkscape:window-y="119"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-73.03172,-146.26395)">
+    <path
+       sodipodi:type="star"
+       style="fill:#ffffff;stroke:#000000;stroke-width:0.529167;stroke-dasharray:none"
+       id="path2"
+       inkscape:flatsided="false"
+       sodipodi:sides="5"
+       sodipodi:cx="77.241219"
+       sodipodi:cy="150.59038"
+       sodipodi:r1="3.6779137"
+       sodipodi:r2="2.0381938"
+       sodipodi:arg1="-1.5707963"
+       sodipodi:arg2="-0.94247777"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 77.241219,146.91246 1.19802,2.02898 2.299883,0.5124 -1.559466,1.76637 0.223386,2.34566 -2.161823,-0.9373 -2.161824,0.9373 0.223386,-2.34566 -1.559466,-1.76637 2.299883,-0.5124 z"
+       inkscape:transform-center-y="-0.21647443"
+       transform="matrix(0.75,0,0,0.75,19.334139,37.813791)" />
+  </g>
+</svg>
