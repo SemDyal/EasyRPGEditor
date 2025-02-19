@@ -334,6 +334,9 @@
            <height>16777215</height>
           </size>
          </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
          <property name="verticalScrollBarPolicy">
           <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
          </property>
@@ -515,6 +518,9 @@
            <width>220</width>
            <height>16777215</height>
           </size>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
          </property>
          <property name="verticalScrollBarPolicy">
           <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>

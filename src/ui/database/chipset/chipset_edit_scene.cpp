@@ -16,7 +16,6 @@
  */
 
 #include "chipset_edit_scene.h"
-#include "chipset_widget.h"
 #include "common/dbstring.h"
 #include <QGraphicsSceneMouseEvent>
 #include <QSvgRenderer>
@@ -34,9 +33,25 @@ ChipsetEditScene::ChipsetEditScene(Core::Layer layer, lcf::rpg::Chipset *data, Q
     m_overlay.setGraphicsEffect(opacity);
     if (layer == Core::LOWER) {
         m_editMode = Chipset::EDIT_MODE_TERRAIN;
+        m_outline.setColor(Qt::black);
+        m_outline.setWidth(5);
+        m_font.setBold(false);
+
     } else {
         m_editMode = Chipset::EDIT_MODE_PASSABILITY;
     }
+}
+
+void ChipsetEditScene::drawTerrainPiece(int x, int y, int16_t value, bool highlight) {
+    m_painter.setPen(m_outline);
+    QRect bounds(x, y, 32, 32);
+    QFontMetrics fm(m_font);
+    int width = fm.horizontalAdvance(QString::number(value));
+    QPainterPath path;
+    path.addText(x + 16 - width / 2, y+21, m_font, QString::number(value));
+    m_painter.drawPath(path);
+    m_painter.setPen(highlight ? Qt::yellow : Qt::white);
+    m_painter.drawPath(path);
 }
 
 void ChipsetEditScene::setData(lcf::rpg::Chipset *data) {
@@ -52,9 +67,8 @@ void ChipsetEditScene::setTerrain(QModelIndex terrain, QModelIndex _) {
 void ChipsetEditScene::setEditMode(int editMode) {
     QPixmap overlay(192, m_layer == Core::LOWER ? 864 : 768);
     overlay.fill(Qt::transparent);
-    QPainter painter;
-    painter.begin(&overlay);
-    painter.setRenderHint(QPainter::Antialiasing);
+    m_painter.begin(&overlay);
+    m_painter.setRenderHint(QPainter::Antialiasing);
     int x = 0;
     int y = 0;
 
@@ -62,23 +76,10 @@ void ChipsetEditScene::setEditMode(int editMode) {
         if (m_layer == Core::UPPER) {
             throw "ChipsetEditScene: Cannot set terrain on upper layer!";
         }
-        QPen outline;
-        outline.setColor(Qt::black);
-        outline.setWidth(5);
-        QFont font;
-        font.setBold(false);
-        painter.setBrush(Qt::white);
-        painter.setFont(font);
+        m_painter.setBrush(Qt::white);
+        m_painter.setFont(m_font);
         for (int16_t i : m_data->terrain_data) {
-            painter.setPen(outline);
-            QRect bounds(x, y, 32, 32);
-            QFontMetrics fm(font);
-            int width = fm.horizontalAdvance(QString::number(i));
-            QPainterPath path;
-            path.addText(x + 16 - width / 2, y+21, font, QString::number(i));
-            painter.drawPath(path);
-            painter.setPen(Qt::white);
-            painter.drawPath(path);
+            drawTerrainPiece(x, y, i, false);
             x += 32;
             if (x == 192) {
                 x = 0;
@@ -88,13 +89,13 @@ void ChipsetEditScene::setEditMode(int editMode) {
     } else if (editMode == Chipset::EDIT_MODE_PASSABILITY) {
         for (uint8_t i : m_layer == Core::LOWER ? m_data->passable_data_lower : m_data->passable_data_upper) {
             if ((i >> 5) & 1) {
-                painter.drawPixmap(x, y, m_pass_square.pixmap(32));
+                m_painter.drawPixmap(x, y, m_pass_square.pixmap(32));
             } else if ((i >> 4) & 1) {
-                painter.drawPixmap(x, y, m_pass_star.pixmap(32));
+                m_painter.drawPixmap(x, y, m_pass_star.pixmap(32));
             } else if (!(i & 0b1111)) {
-                painter.drawPixmap(x, y, m_pass_x.pixmap(32));
+                m_painter.drawPixmap(x, y, m_pass_x.pixmap(32));
             } else {
-                painter.drawPixmap(x, y, m_pass_o.pixmap(32));
+                m_painter.drawPixmap(x, y, m_pass_o.pixmap(32));
             }
             x += 32;
             if (x == 192) {
@@ -105,13 +106,29 @@ void ChipsetEditScene::setEditMode(int editMode) {
     } else if (editMode == Chipset::EDIT_MODE_EDGES) {
         for (uint8_t i : m_layer == Core::LOWER ? m_data->passable_data_lower : m_data->passable_data_upper) {
             // down
-            painter.drawPixmap(x, y, i & 1 ? m_counter_on.pixmap(32) : m_counter_off.pixmap(32));
+            if (i & 1) {
+                m_painter.drawPixmap(x, y, m_edges_down.pixmap(32));
+            } else {
+                m_painter.drawPixmap(x, y+10, m_counter_off.pixmap(32));
+            }
             // left
-            painter.drawPixmap(x, y, (i >> 1) & 1 ? m_counter_on.pixmap(32) : m_counter_off.pixmap(32));
+            if ((i >> 1) & 1) {
+                m_painter.drawPixmap(x, y, m_edges_left.pixmap(32));
+            } else {
+                m_painter.drawPixmap(x-10, y, m_counter_off.pixmap(32));
+            }
             // right
-            painter.drawPixmap(x, y, (i >> 2) & 1 ? m_counter_on.pixmap(32) : m_counter_off.pixmap(32));
+            if ((i >> 2) & 1) {
+                m_painter.drawPixmap(x, y, m_edges_right.pixmap(32));
+            } else {
+                m_painter.drawPixmap(x+10, y, m_counter_off.pixmap(32));
+            }
             // up
-            painter.drawPixmap(x, y, (i >> 3) & 1 ? m_counter_on.pixmap(32) : m_counter_off.pixmap(32));
+            if ((i >> 3) & 1) {
+                m_painter.drawPixmap(x, y, m_edges_up.pixmap(32));
+            } else {
+                m_painter.drawPixmap(x, y-10, m_counter_off.pixmap(32));
+            }
             x += 32;
             if (x == 192) {
                 x = 0;
@@ -123,7 +140,7 @@ void ChipsetEditScene::setEditMode(int editMode) {
             throw "ChipsetEditScene: Cannot set counter on lower layer!";
         }
         for (uint8_t i : m_data->passable_data_upper) {
-            painter.drawPixmap(x, y, (i >> 6) & 1 ? m_counter_on.pixmap(32) : m_counter_off.pixmap(32));
+            m_painter.drawPixmap(x, y, (i >> 6) & 1 ? m_counter_on.pixmap(32) : m_counter_off.pixmap(32));
             x += 32;
             if (x == 192) {
                 x = 0;
@@ -131,7 +148,7 @@ void ChipsetEditScene::setEditMode(int editMode) {
             }
         }
     }
-    painter.end();
+    m_painter.end();
     m_overlay.setPixmap(overlay);
 
     m_editMode = Chipset::EditMode(editMode);
@@ -151,14 +168,13 @@ void ChipsetEditScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent) {
 }
 
 void ChipsetEditScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) {
+    int offset = ((int)mouseEvent->scenePos().y() / 32) * 6 + ((int)mouseEvent->scenePos().x() / 32) % 6;
     if (m_editMode == Chipset::EDIT_MODE_TERRAIN) {
-        int offset = ((int)mouseEvent->scenePos().y() / 32) * 6 + ((int)mouseEvent->scenePos().x() / 32) % 6;
         if (m_data->terrain_data.size() > offset && m_data->terrain_data[offset] != m_terrain && mouseEvent->buttons() == Qt::LeftButton) {
             m_data->terrain_data[offset] = m_terrain;
-            setEditMode(Chipset::EDIT_MODE_TERRAIN);
+            drawTerrainPiece((int)mouseEvent->scenePos().x(), (int)mouseEvent->scenePos().y(), m_terrain, false);
         }
     } else if (m_editMode == Chipset::EDIT_MODE_PASSABILITY) {
-        int offset = ((int)mouseEvent->scenePos().y() / 32) * 6 + ((int)mouseEvent->scenePos().x() / 32) % 6;
         uint8_t &i = m_layer == Core::LOWER ? m_data->passable_data_lower[offset] : m_data->passable_data_upper[offset];
         if (mouseEvent->buttons() == Qt::LeftButton) {
             if ((i >> 5) & 1) { // square to o
@@ -190,8 +206,42 @@ void ChipsetEditScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) {
             }
         }
     } else if (m_editMode == Chipset::EDIT_MODE_EDGES) {
+        uint8_t &i = m_layer == Core::LOWER ? m_data->passable_data_lower[offset] : m_data->passable_data_upper[offset];
+        int x = (int)mouseEvent->scenePos().x() % 32;
+        int y = (int)mouseEvent->scenePos().y() % 32;
+        // down
+        if (( 8 <= x && x <= 23 && 24 <= y && y <= 31 )
+            || ( 9 <= x && x <= 22 && y == 23 )
+            || ( 10 <= x && x <= 21 && y == 22 )
+            || ( 11 <= x && x <= 20 && y == 21 )
+            || ( 12 <= x && x <= 19 && y == 20 )) {
+            i ^= 1;
+        }
+        // left
+        if (( 0 <= x && x <= 7 && 8 <= y && y <= 23 )
+            || ( x == 8 && 9 <= y && y <= 22 )
+            || ( x == 9 && 10 <= y && y <= 21 )
+            || ( x == 9 && 11 <= y && y <= 20 )
+            || ( x == 9 && 12 <= y && y <= 19 )) {
+            i ^= (1 << 1);
+        }
+        // right
+        if (( 24 <= x && x <= 32 && 8 <= y && y <= 23 )
+            || ( x == 23 && 9 <= y && y <= 22 )
+            || ( x == 22 && 10 <= y && y <= 21 )
+            || ( x == 21 && 11 <= y && y <= 20 )
+            || ( x == 20 && 12 <= y && y <= 19 )) {
+            i ^= (1 << 2);
+        }
+        // up
+        if (( 8 <= x && x <= 23 && 0 <= y && y <= 7 )
+            || ( 9 <= x && x <= 22 && y == 8 )
+            || ( 10 <= x && x <= 21 && y == 9 )
+            || ( 11 <= x && x <= 20 && y == 10 )
+            || ( 12 <= x && x <= 19 && y == 11 )) {
+            i ^= (1 << 3);
+        }
     } else if (m_editMode == Chipset::EDIT_MODE_COUNTER) {
-        int offset = ((int)mouseEvent->scenePos().y() / 32) * 6 + ((int)mouseEvent->scenePos().x() / 32) % 6;
         if (m_data->passable_data_upper.size() > offset && mouseEvent->buttons() == Qt::LeftButton) {
             m_data->passable_data_upper[offset] ^= Chipset::PassableFlag::Counter;
         }

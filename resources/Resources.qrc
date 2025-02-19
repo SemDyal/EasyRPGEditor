@@ -101,5 +101,9 @@
         <file alias="passability_star">icons/passability/passability_star.svg</file>
         <file alias="passability_counter_off">icons/passability/passability_counter_off.svg</file>
         <file alias="passability_counter_on">icons/passability/passability_counter_on.svg</file>
+        <file alias="passability_edges_down">icons/passability/passability_edges_down.svg</file>
+        <file alias="passability_edges_left">icons/passability/passability_edges_left.svg</file>
+        <file alias="passability_edges_right">icons/passability/passability_edges_right.svg</file>
+        <file alias="passability_edges_up">icons/passability/passability_edges_up.svg</file>
     </qresource>
 </RCC>

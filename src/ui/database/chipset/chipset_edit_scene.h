@@ -36,11 +36,16 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);
 private:
+    void drawTerrainPiece(int x, int y, int16_t value, bool highlight);
+
     lcf::rpg::Chipset *m_data;
     Chipset::EditMode m_editMode;
     Core::Layer m_layer;
     QGraphicsPixmapItem m_overlay;
     int16_t m_terrain = 1;
+    QPen m_outline;
+    QFont m_font;
+    QPainter m_painter;
 
     QIcon m_pass_o = QIcon(":/passability/passability_o");
     QIcon m_pass_x = QIcon(":/passability/passability_x");
@@ -48,4 +53,9 @@ private:
     QIcon m_pass_star = QIcon(":/passability/passability_star");
     QIcon m_counter_on = QIcon(":/passability/passability_counter_on");
     QIcon m_counter_off = QIcon(":/passability/passability_counter_off");
+    QIcon m_edges_down = QIcon(":/passability/passability_edges_down");
+    QIcon m_edges_left = QIcon(":/passability/passability_edges_left");
+    QIcon m_edges_right = QIcon(":/passability/passability_edges_right");
+    QIcon m_edges_up = QIcon(":/passability/passability_edges_up");
+
 };
