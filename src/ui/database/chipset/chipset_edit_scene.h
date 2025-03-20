@@ -46,6 +46,7 @@ private:
     QPen m_outline;
     QFont m_font;
     QPainter m_painter;
+    emhash8::HashMap<int16_t, QPixmap> m_numberCache;
 
     QIcon m_pass_o = QIcon(":/passability/passability_o");
     QIcon m_pass_x = QIcon(":/passability/passability_x");

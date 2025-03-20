@@ -43,15 +43,29 @@ ChipsetEditScene::ChipsetEditScene(Core::Layer layer, lcf::rpg::Chipset *data, Q
 }
 
 void ChipsetEditScene::drawTerrainPiece(int x, int y, int16_t value, bool highlight) {
-    m_painter.setPen(m_outline);
-    QRect bounds(x, y, 32, 32);
-    QFontMetrics fm(m_font);
-    int width = fm.horizontalAdvance(QString::number(value));
-    QPainterPath path;
-    path.addText(x + 16 - width / 2, y+21, m_font, QString::number(value));
-    m_painter.drawPath(path);
-    m_painter.setPen(highlight ? Qt::yellow : Qt::white);
-    m_painter.drawPath(path);
+    if (m_numberCache.contains(value)) {
+        m_painter.drawPixmap(x, y, 32, 32, m_numberCache[value]);
+    } else {
+        QPixmap numberPixmap(32, 32);
+        numberPixmap.fill(Qt::transparent);
+        QPainter num_painter;
+        num_painter.begin(&numberPixmap);
+        num_painter.setRenderHint(QPainter::Antialiasing);
+        num_painter.setBrush(Qt::white);
+        num_painter.setFont(m_font);
+        num_painter.setPen(m_outline);
+        QRect bounds(0, 0, 32, 32);
+        QFontMetrics fm(m_font);
+        int width = fm.horizontalAdvance(QString::number(value));
+        QPainterPath path;
+        path.addText(16 - width / 2, 21, m_font, QString::number(value));
+        num_painter.drawPath(path);
+        num_painter.setPen(highlight ? Qt::yellow : Qt::white);
+        num_painter.drawPath(path);
+        num_painter.end();
+        m_painter.drawPixmap(x, y, 32, 32, numberPixmap);
+        m_numberCache[value] = numberPixmap;
+    }
 }
 
 void ChipsetEditScene::setData(lcf::rpg::Chipset *data) {
@@ -76,8 +90,6 @@ void ChipsetEditScene::setEditMode(int editMode) {
         if (m_layer == Core::UPPER) {
             throw "ChipsetEditScene: Cannot set terrain on upper layer!";
         }
-        m_painter.setBrush(Qt::white);
-        m_painter.setFont(m_font);
         for (int16_t i : m_data->terrain_data) {
             drawTerrainPiece(x, y, i, false);
             x += 32;
