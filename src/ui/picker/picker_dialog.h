@@ -56,6 +56,8 @@ private slots:
 	void buttonClicked(QAbstractButton* button);
 	void viewClicked(const QPointF& pos);
 
+    void on_filesystemView_doubleClicked(const QModelIndex &index);
+
 protected:
 	Ui::PickerDialog *ui;
 

@@ -138,6 +138,18 @@ void PickerDialog::on_filesystemView_clicked(const QModelIndex &index) {
 	}
 }
 
+void PickerDialog::on_filesystemView_doubleClicked(const QModelIndex &index) {
+    m_currentFile = m_model->fileInfo(index);
+    ui->wrappedWidget->fileDoubleClicked(m_currentFile.absoluteFilePath());
+    if (m_file_type == FileFinder::FileType::Image) {
+        QPixmap image = ImageLoader::Load(m_currentFile.absoluteFilePath());
+        ui->wrappedWidget->imageChanged(image, m_currentFile.fileName());
+    }
+}
+
 void PickerDialog::viewClicked(const QPointF& pos) {
 	ui->wrappedWidget->clicked(pos);
 }
+
+
+

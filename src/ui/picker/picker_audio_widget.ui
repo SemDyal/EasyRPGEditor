@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>359</height>
+    <height>419</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,28 +29,84 @@
          <number>0</number>
         </property>
         <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+         <enum>Qt::Orientation::Horizontal</enum>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
        <widget class="QLabel" name="labelFadeIn">
-        <property name="text">
-         <string>0s</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight</set>
-        </property>
         <property name="minimumSize">
          <size>
           <width>40</width>
           <height>0</height>
          </size>
         </property>
+        <property name="text">
+         <string>0s</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignRight</set>
+        </property>
        </widget>
       </item>
      </layout>
     </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="title">
+      <string>Balance</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_4">
+      <item row="0" column="0">
+       <widget class="RpgSlider" name="sliderBalance">
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="value">
+         <number>50</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="labelBalance">
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>50:50</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignRight</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="playPushButton">
+       <property name="text">
+        <string>Play</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="stopPushButton">
+       <property name="text">
+        <string>Stop</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item row="1" column="0">
     <widget class="QGroupBox" name="groupBox">
@@ -67,23 +123,23 @@
          <number>100</number>
         </property>
         <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+         <enum>Qt::Orientation::Horizontal</enum>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
        <widget class="QLabel" name="labelVolume">
-        <property name="text">
-         <string>100%</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight</set>
-        </property>
         <property name="minimumSize">
          <size>
           <width>40</width>
           <height>0</height>
          </size>
+        </property>
+        <property name="text">
+         <string>100%</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignRight</set>
         </property>
        </widget>
       </item>
@@ -108,66 +164,41 @@
          <number>100</number>
         </property>
         <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+         <enum>Qt::Orientation::Horizontal</enum>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
        <widget class="QLabel" name="labelTempo">
-        <property name="text">
-         <string>100%</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight</set>
-        </property>
         <property name="minimumSize">
          <size>
           <width>40</width>
           <height>0</height>
          </size>
+        </property>
+        <property name="text">
+         <string>100%</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignRight</set>
         </property>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
-   <item row="3" column="0">
-    <widget class="QGroupBox" name="groupBox_3">
-     <property name="title">
-      <string>Balance</string>
+   <item row="4" column="0">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Orientation::Vertical</enum>
      </property>
-     <layout class="QGridLayout" name="gridLayout_4">
-      <item row="0" column="0">
-       <widget class="RpgSlider" name="sliderBalance">
-        <property name="maximum">
-         <number>100</number>
-        </property>
-        <property name="value">
-         <number>50</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="labelBalance">
-        <property name="text">
-         <string>50:50</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight</set>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>40</width>
-          <height>0</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>

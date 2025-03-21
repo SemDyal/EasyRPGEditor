@@ -23,18 +23,25 @@
 
 PickerAudioWidget::PickerAudioWidget(const lcf::rpg::Music& music, QWidget *parent) :
 	PickerChildWidget(parent),
-	ui(new Ui::PickerAudioWidget) {
+    ui(new Ui::PickerAudioWidget) {
 	ui->setupUi(this);
 
 	ui->sliderFadeIn->setValue(music.fadein / 1000);
 	ui->sliderVolume->setValue(music.volume);
 	ui->sliderTempo->setValue(music.tempo);
 	ui->sliderBalance->setValue(music.balance);
+
+    m_player.setAudioOutput(&m_audio);
+    m_player.setLoops(-1);
+    m_audio.setVolume(qreal(music.volume) / 100);
+    m_player.setPlaybackRate(qreal(music.tempo) / 100);
+
+    m_type = Type::Music;
 }
 
 PickerAudioWidget::PickerAudioWidget(const lcf::rpg::Sound& sound, QWidget *parent) :
 	PickerChildWidget(parent),
-	ui(new Ui::PickerAudioWidget) {
+    ui(new Ui::PickerAudioWidget) {
 	ui->setupUi(this);
 
 	ui->sliderVolume->setValue(sound.volume);
@@ -42,6 +49,12 @@ PickerAudioWidget::PickerAudioWidget(const lcf::rpg::Sound& sound, QWidget *pare
 	ui->sliderBalance->setValue(sound.balance);
 
 	ui->groupFadeIn->hide();
+
+    m_player.setAudioOutput(&m_audio);
+    m_audio.setVolume(qreal(sound.volume) / 100);
+    m_player.setPlaybackRate(qreal(sound.tempo) / 100);
+
+    m_type = Type::Sound;
 }
 
 PickerAudioWidget::~PickerAudioWidget() {
@@ -50,6 +63,11 @@ PickerAudioWidget::~PickerAudioWidget() {
 
 void PickerAudioWidget::fileChanged(const QString& filename) {
 	m_filename = filename;
+}
+
+void PickerAudioWidget::fileDoubleClicked(const QString& filename) {
+    m_player.setSource(filename);
+    m_player.play();
 }
 
 int PickerAudioWidget::fadeInTime() const {
@@ -74,12 +92,24 @@ void PickerAudioWidget::on_sliderFadeIn_valueChanged(int value) {
 
 void PickerAudioWidget::on_sliderVolume_valueChanged(int value) {
 	ui->labelVolume->setText(QString("%1%").arg(value));
+    m_audio.setVolume(qreal(value) / 100);
 }
 
 void PickerAudioWidget::on_sliderTempo_valueChanged(int value) {
-	ui->labelTempo->setText(QString("%1%").arg(value));
+    ui->labelTempo->setText(QString("%1%").arg(value));
+    m_player.setPlaybackRate(qreal(value) / 100);
 }
 
 void PickerAudioWidget::on_sliderBalance_valueChanged(int value) {
 	ui->labelBalance->setText(QString("%1:%2").arg(100 - value).arg(value));
 }
+
+void PickerAudioWidget::on_playPushButton_clicked() {
+    m_player.setSource(m_filename);
+    m_player.play();
+}
+
+void PickerAudioWidget::on_stopPushButton_clicked() {
+    m_player.stop();
+}
+
