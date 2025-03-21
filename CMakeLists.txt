@@ -276,8 +276,6 @@ set(EDITOR_SOURCES
 	src/ui/other/import_project_dialog.cpp
 	src/ui/other/import_project_dialog.h
 	src/ui/other/import_project_dialog.ui
-	src/ui/other/musicplayer.cpp
-	src/ui/other/musicplayer.h
 	src/ui/other/new_project_dialog.cpp
 	src/ui/other/new_project_dialog.h
 	src/ui/other/new_project_dialog.ui

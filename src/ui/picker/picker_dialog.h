@@ -42,6 +42,7 @@ public:
 	~PickerDialog() override;
 
     QPushButton* addActionButton(QString label);
+    void makePreview();
 
     void setDirectory(const QString &dir);
 	void setDirectoryAndFile(const QString& dir, const QString& initialFile);

@@ -60,11 +60,15 @@ PickerDialog::~PickerDialog() {
 	delete ui;
 }
 
-QPushButton* PickerDialog::addActionButton(QString label)
-{
+QPushButton* PickerDialog::addActionButton(QString label) {
     auto* button = new QPushButton(label);
     ui->viewLayout->addWidget(button);
     return button;
+}
+
+void PickerDialog::makePreview() {
+    ui->buttonBox->hide();
+    setModal(false);
 }
 
 void PickerDialog::buttonClicked(QAbstractButton* button) {
