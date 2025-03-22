@@ -64,24 +64,27 @@ std::shared_ptr<Project> Project::load(const QString& dir) {
 	}
 
 	if (!cfg.isNull()) {
-		lcf::INIReader ini(cfg.toStdString());
-		std::string title = ini.GetString("RPG_RT", GAMETITLE, tr("Untitled").toStdString());
+        lcf::INIReader ini(cfg.toStdString());
+        std::string_view title = ini.GetString("RPG_RT", GAMETITLE, tr("Untitled").toStdString());
 
 		if (project_type == FileFinder::ProjectType::Legacy) {
 			// Check for game encoding
-			std::string enc = ini.GetString("EasyRPG", "Encoding", "");
+            std::string enc = ini.GetString("EasyRPG", "Encoding", "").data();
 			if (enc.empty()) {
-				// Only use the title for encoding detection
+                // Only use the title for encoding detection
 				// This is called for all games in the "Open Project" list
-				// Upon project load a smarter detection is used
-				enc = lcf::ReaderUtil::DetectEncoding(title);
+                // Upon project load a smarter detection is used
+                enc = lcf::ReaderUtil::DetectEncoding(title);
 			}
 
-			p->setEncoding(QString::fromStdString(enc));
-			title = lcf::ReaderUtil::Recode(title, enc);
-		}
+            p->setEncoding(QString::fromStdString(enc));
+            // Without this extra update value inbetween, the title becomes partially overwritten with garbage data
+            // Because C++ is a good programming language with no flaws whatsoever...
+            std::string* update = new std::string(lcf::ReaderUtil::Recode(title, enc));
+            title = *update;
+        }
 
-		p->setGameTitle(QString::fromStdString(title));
+        p->setGameTitle(QString::fromStdString(std::string(title)));
 	}
 
 	return p;
