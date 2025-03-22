@@ -509,6 +509,7 @@ void MainWindow::update_actions()
 
 	ui->actionDrawCircle->setEnabled(has_project);
 	ui->actionGameDiskCreate->setEnabled(has_project);
+    ui->actionJukebox->setEnabled(has_project);
 	ui->actionDatabase->setEnabled(has_project);
 	ui->actionDrawPen->setEnabled(has_project);
 	ui->actionDrawFill->setEnabled(has_project);
