@@ -22,6 +22,9 @@
 
 #include <ui/common/rpg_model.h>
 
+#include <ui/picker/picker_dialog.h>
+#include <ui/picker/picker_image_widget.h>
+
 ChipsetWidget::ChipsetWidget(ProjectData& project, QWidget *parent) :
 	QWidget(parent),
     ui(new Ui::ChipsetWidget),
@@ -68,18 +71,17 @@ void ChipsetWidget::setData(lcf::rpg::Chipset* chipset) {
 
     LcfWidgetBinding::bind(m_sequenceButtonGroup, chipset->animation_type);
     LcfWidgetBinding::bind(m_speedButtonGroup, chipset->animation_speed);
-    //TODO: connect upperEditMode to ChipsetEditWidget
 
-    lower_scene.set_chipset(ToQString(chipset->chipset_name));
-    lower_scene.draw_overview(RpgPainter::ALL_LOWER);
+    drawLayers(ToQString(chipset->chipset_name));
     ui->lowerGraphicsView->setScene(&lower_scene);
-    upper_scene.force_chipset(lower_scene.share_chipset());
-    upper_scene.draw_overview(RpgPainter::ALL_UPPER);
     ui->upperGraphicsView->setScene(&upper_scene);
 }
 
-void ChipsetWidget::reloadTerrain() {
-    ui->terrainListView->setModel(new RpgModel<lcf::rpg::Terrain>(m_project));
+void ChipsetWidget::drawLayers(QString chipset) {
+    lower_scene.set_chipset(chipset);
+    lower_scene.draw_overview(RpgPainter::ALL_LOWER);
+    upper_scene.force_chipset(lower_scene.share_chipset());
+    upper_scene.draw_overview(RpgPainter::ALL_UPPER);
 }
 
 void ChipsetWidget::on_layerTabWidget_currentChanged(int index) {
@@ -90,5 +92,17 @@ void ChipsetWidget::on_layerTabWidget_currentChanged(int index) {
         connect(m_lowerEditModeButtonGroup, &QButtonGroup::idClicked, &lower_scene, &ChipsetEditScene::setEditMode);
         disconnect(m_upperEditModeButtonGroup, &QButtonGroup::idClicked, &upper_scene, &ChipsetEditScene::setEditMode);
     }
+}
+
+
+void ChipsetWidget::on_chipsetPushButton_clicked() {
+    auto* widget = new PickerImageWidget(this);
+    PickerDialog dialog(m_project, FileFinder::FileType::Image, widget, this);
+    QObject::connect(&dialog, &PickerDialog::fileSelected, [&](const QString& baseName) {
+        ui->chipsetLineEdit->setText(baseName);
+    });
+    dialog.setDirectoryAndFile(CHIPSET, ui->chipsetLineEdit->text());
+    dialog.exec();
+    drawLayers(ui->chipsetLineEdit->text());
 }
 

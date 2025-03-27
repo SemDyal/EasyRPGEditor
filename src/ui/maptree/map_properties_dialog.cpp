@@ -21,8 +21,7 @@
 #include "core.h"
 #include "common/dbstring.h"
 #include "ui/picker/picker_audio_widget.h"
-#include "ui/picker/picker_backdrop_widget.h"
-#include "ui/picker/picker_panorama_widget.h"
+#include "ui/picker/picker_image_widget.h"
 #include "ui/picker/picker_dialog.h"
 #include <QMessageBox>
 #include "common/lcf_widget_binding.h"
@@ -444,7 +443,7 @@ void MapPropertiesDialog::on_pushRemoveEncounter_clicked() {
 }
 
 void MapPropertiesDialog::on_pushSetPanorama_clicked() {
-	auto* widget = new PickerPanoramaWidget(this);
+    auto* widget = new PickerImageWidget(this);
 	PickerDialog dialog(m_project, FileFinder::FileType::Image, widget, this);
 	QObject::connect(&dialog, &PickerDialog::fileSelected, [&](const QString& baseName) {
 		new_panorama = ToDBString(baseName);
@@ -477,7 +476,7 @@ void MapPropertiesDialog::on_toolSetBGM_clicked() {
 }
 
 void MapPropertiesDialog::on_toolSetBackdrop_clicked() {
-	auto* widget = new PickerBackdropWidget(this);
+    auto* widget = new PickerImageWidget(this);
 	PickerDialog dialog(m_project, FileFinder::FileType::Image, widget, this);
 	QObject::connect(&dialog, &PickerDialog::fileSelected, [&](const QString& baseName) {
 		ui->lineBackdropName->setText(baseName);

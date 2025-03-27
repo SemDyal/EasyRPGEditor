@@ -38,8 +38,8 @@ public:
 	RpgModel(ProjectData& project, std::vector<LCF>& data, QObject *parent = nullptr) :
 			QAbstractListModel(parent), m_project(project), m_data(data) {}
 	int rowCount(const QModelIndex& = QModelIndex()) const override { return m_data.size(); }
-    bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
-    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
+    bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
+    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 	QVariant data(const QModelIndex &index, int role) const override;
     std::vector<LCF>& lcfData() const {
 		return m_data;

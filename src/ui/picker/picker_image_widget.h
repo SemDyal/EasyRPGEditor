@@ -23,10 +23,10 @@
 class QGraphicsScene;
 class QGraphicsPixmapItem;
 
-class PickerPanoramaWidget : public PickerChildWidget {
+class PickerImageWidget : public PickerChildWidget {
 	Q_OBJECT
 public:
-	PickerPanoramaWidget(QWidget* parent = nullptr) : PickerChildWidget(parent) {}
+    PickerImageWidget(QWidget* parent = nullptr) : PickerChildWidget(parent) {}
 
     void imageChanged(QPixmap image, QString filename) override;
 

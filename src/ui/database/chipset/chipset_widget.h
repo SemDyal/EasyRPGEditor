@@ -40,13 +40,15 @@ public:
     ~ChipsetWidget();
 
 	void setData(lcf::rpg::Chipset* chipset);
-    void reloadTerrain();
+    void drawLayers(QString chipset);
 signals:
     void lowerModeChanged(Chipset::EditMode editMode);
     void upperModeChanged(Chipset::EditMode editMode);
     void terrainChanged(int terrain);
 private slots:
     void on_layerTabWidget_currentChanged(int index);
+
+    void on_chipsetPushButton_clicked();
 
 private:
     Ui::ChipsetWidget *ui;

@@ -15,15 +15,15 @@
  * along with EasyRPG Editor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "picker_backdrop_widget.h"
+#include "picker_image_widget.h"
 #include "ui/viewer/rpg_graphics_view.h"
 #include <QGraphicsScene>
 
-void PickerBackdropWidget::imageChanged(QPixmap image, QString filename) {
+// Generic picker for anything only showing an image.
+void PickerImageWidget::imageChanged(QPixmap image, QString filename) {
     Q_UNUSED(filename)
-	if (!m_pixmap) {
-		m_view->setMinimumSize(324, 244);
-		m_view->setMaximumSize(324, 244);
+    if (!m_pixmap) {
+        m_view->setMinimumSize(324, 244);
 		m_pixmap = new QGraphicsPixmapItem(image);
 	}
 
