@@ -234,6 +234,8 @@ set(EDITOR_SOURCES
 	src/ui/database/system_widget.cpp
 	src/ui/database/system_widget.h
 	src/ui/database/system_widget.ui
+        src/ui/database/tabwidget.cpp
+        src/ui/database/tabwidget.h
 	src/ui/database/terrain_widget.cpp
 	src/ui/database/terrain_widget.h
 	src/ui/database/terrain_widget.ui

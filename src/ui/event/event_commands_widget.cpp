@@ -195,7 +195,7 @@ void EventCommandsWidget::editEvent(QTreeWidgetItem* item, int column) {
     case Cmd::MessageOptions: evt_dialog.reset(make_evt_dialog<MessageOptionsWidget>(m_project, cmd, this)); break;
     case Cmd::ChangeFaceGraphic: evt_dialog.reset(make_evt_dialog<FaceGraphicsWidget>(m_project, cmd, this)); break;
     case Cmd::ShowChoice: evt_dialog.reset(make_complex_evt<ShowChoicesWidget>(m_project, evt_lst, this)); break;
-    //case Cmd::InputNumber: evt_dialog.reset(make_evt_dialog<InputNumberWidget>(m_project, cmd, this)); break;
+    case Cmd::InputNumber: evt_dialog.reset(make_evt_dialog<InputNumberWidget>(m_project, cmd, this)); break;
     case Cmd::ControlSwitches: evt_dialog.reset(make_evt_dialog<SwitchOperationsWidget>(m_project, cmd, this)); break;
     case Cmd::ControlVars: evt_dialog.reset(make_evt_dialog<VariableOperationsWidget>(m_project, cmd, this)); break;
     case Cmd::TimerOperation: evt_dialog.reset(make_evt_dialog<TimerOperationWidget>(m_project, cmd, this)); break;

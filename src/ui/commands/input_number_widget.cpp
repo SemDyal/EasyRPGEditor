@@ -30,3 +30,11 @@ InputNumberWidget::InputNumberWidget(ProjectData& project, QWidget *parent) :
 InputNumberWidget::~InputNumberWidget() {
 	delete ui;
 }
+
+void InputNumberWidget::setData(lcf::rpg::EventCommand* cmd) {
+
+}
+
+void InputNumberWidget::apply() {
+
+}

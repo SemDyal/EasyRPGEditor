@@ -31,6 +31,9 @@ public:
 	explicit InputNumberWidget(ProjectData& project, QWidget *parent);
 	~InputNumberWidget() override;
 
+    void setData(lcf::rpg::EventCommand* cmd) override;
+    void apply();
+
 private:
 	Ui::InputNumberWidget *ui;
 };

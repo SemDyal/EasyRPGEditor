@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>315</width>
-    <height>156</height>
+    <height>102</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,6 +28,12 @@
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QGroupBox" name="groupBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>1</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="title">
          <string>Digits allowed</string>
         </property>
@@ -53,6 +59,12 @@
       </item>
       <item>
        <widget class="QGroupBox" name="groupBox_2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>3</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="title">
          <string>Store in variable</string>
         </property>
