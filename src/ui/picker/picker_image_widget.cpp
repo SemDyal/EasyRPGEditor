@@ -15,22 +15,18 @@
  * along with EasyRPG Editor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-
+#include "picker_image_widget.h"
+#include "ui/viewer/rpg_graphics_view.h"
 #include <QGraphicsScene>
-#include <qgraphicsitem.h>
-#include <src/ui/rpg_painter.h>
 
-class TilesetScene : public QGraphicsScene
-{
-public:
-    TilesetScene(QString chipset_name = "", QObject *parent = nullptr);
+// Generic picker for anything only showing an image.
+void PickerImageWidget::imageChanged(QPixmap image, QString filename) {
+    Q_UNUSED(filename)
+    if (!m_pixmap) {
+        m_view->setMinimumSize(324, 244);
+		m_pixmap = new QGraphicsPixmapItem(image);
+	}
 
-    void set_chipset(QString name);
-    void force_chipset(QPixmap chipset);
-    void draw_overview(RpgPainter::TileOverviewMode mode);
-    QPixmap& share_chipset();
-private:
-    QPixmap m_chipset;
-    QGraphicsPixmapItem item;
-};
+	m_pixmap->setPixmap(image);
+	m_view->setItem(m_pixmap);
+}

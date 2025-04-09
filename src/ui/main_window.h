@@ -21,12 +21,12 @@
 #include <QMainWindow>
 #include <QSettings>
 #include <QTreeWidgetItem>
+#include "ui/picker/picker_dialog.h"
 #include "ui/other/resource_manager_dialog.h"
 #include "ui/database/database_dialog.h"
 #include "ui/other/search_dialog.h"
 #include "ui/map/map_scene.h"
 #include "ui/common/palette_scene.h"
-#include "ui/other/musicplayer.h"
 
 namespace Ui {
 class MainWindow;
@@ -156,6 +156,7 @@ private:
 	Ui::MainWindow *ui;
 	ResourceManagerDialog *dlg_resource;
 	DatabaseDialog *dlg_db;
+    PickerDialog *jukebox;
 	QSettings m_settings;
 	PaletteScene *m_paletteScene;
 	QMap<int,QGraphicsView*> m_views;

@@ -28,7 +28,7 @@
 #include "ui/database/attribute_widget.h"
 #include "ui/database/battle_animation2_widget.h"
 #include "ui/database/battle_animation_widget.h"
-#include "ui/database/chipset_widget.h"
+#include "ui/database/chipset/chipset_widget.h"
 #include "ui/database/class_widget.h"
 #include "ui/database/common_event_widget.h"
 #include "ui/database/enemy_group_widget.h"

@@ -42,6 +42,7 @@ public:
 	~PickerDialog() override;
 
     QPushButton* addActionButton(QString label);
+    void makePreview();
 
     void setDirectory(const QString &dir);
 	void setDirectoryAndFile(const QString& dir, const QString& initialFile);
@@ -55,6 +56,8 @@ private slots:
 	void on_filesystemView_clicked(const QModelIndex &index);
 	void buttonClicked(QAbstractButton* button);
 	void viewClicked(const QPointF& pos);
+
+    void on_filesystemView_doubleClicked(const QModelIndex &index);
 
 protected:
 	Ui::PickerDialog *ui;

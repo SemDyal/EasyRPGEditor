@@ -60,11 +60,15 @@ PickerDialog::~PickerDialog() {
 	delete ui;
 }
 
-QPushButton* PickerDialog::addActionButton(QString label)
-{
+QPushButton* PickerDialog::addActionButton(QString label) {
     auto* button = new QPushButton(label);
     ui->viewLayout->addWidget(button);
     return button;
+}
+
+void PickerDialog::makePreview() {
+    ui->buttonBox->hide();
+    setModal(false);
 }
 
 void PickerDialog::buttonClicked(QAbstractButton* button) {
@@ -138,6 +142,18 @@ void PickerDialog::on_filesystemView_clicked(const QModelIndex &index) {
 	}
 }
 
+void PickerDialog::on_filesystemView_doubleClicked(const QModelIndex &index) {
+    m_currentFile = m_model->fileInfo(index);
+    ui->wrappedWidget->fileDoubleClicked(m_currentFile.absoluteFilePath());
+    if (m_file_type == FileFinder::FileType::Image) {
+        QPixmap image = ImageLoader::Load(m_currentFile.absoluteFilePath());
+        ui->wrappedWidget->imageChanged(image, m_currentFile.fileName());
+    }
+}
+
 void PickerDialog::viewClicked(const QPointF& pos) {
 	ui->wrappedWidget->clicked(pos);
 }
+
+
+

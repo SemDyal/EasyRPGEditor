@@ -15,27 +15,27 @@
  * along with EasyRPG Editor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tileset_scene.h"
+#include "chipset_scene.h"
 #include "common/image_loader.h"
 
 #include <core.h>
 #include <qgraphicsitem.h>
 
-TilesetScene::TilesetScene(QString chipset_name, QObject *parent) : QGraphicsScene(parent) {
+ChipsetScene::ChipsetScene(QString chipset_name, QObject *parent) : QGraphicsScene(parent) {
     set_chipset(chipset_name);
     addItem(&item);
     item.setScale(2);
 }
 
-void TilesetScene::set_chipset(QString name) {
+void ChipsetScene::set_chipset(QString name) {
     m_chipset = ImageLoader::Load(core().project()->findFile(CHIPSET, name, FileFinder::FileType::Image), false);
 }
 
-void TilesetScene::force_chipset(QPixmap chipset) {
+void ChipsetScene::force_chipset(QPixmap chipset) {
     m_chipset = chipset;
 }
 
-void TilesetScene::draw_overview(RpgPainter::TileOverviewMode mode) {
+void ChipsetScene::draw_overview(RpgPainter::TileOverviewMode mode) {
     QPainter painter;
     QPixmap pixmap(96, mode == RpgPainter::ALL_LOWER ? 432 : 384);
     pixmap.fill(Qt::transparent);
@@ -74,6 +74,6 @@ void TilesetScene::draw_overview(RpgPainter::TileOverviewMode mode) {
     item.setPixmap(pixmap);
 }
 
-QPixmap& TilesetScene::share_chipset() {
+QPixmap& ChipsetScene::share_chipset() {
     return m_chipset;
 }

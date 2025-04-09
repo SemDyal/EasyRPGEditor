@@ -17,19 +17,20 @@
 
 #pragma once
 
-#include <QWidget>
-#include "picker_child_widget.h"
+#include <QGraphicsScene>
+#include <qgraphicsitem.h>
+#include <src/ui/rpg_painter.h>
 
-class QGraphicsScene;
-class QGraphicsPixmapItem;
-
-class PickerPanoramaWidget : public PickerChildWidget {
-	Q_OBJECT
+class ChipsetScene : public QGraphicsScene
+{
 public:
-	PickerPanoramaWidget(QWidget* parent = nullptr) : PickerChildWidget(parent) {}
+    ChipsetScene(QString chipset_name = "", QObject *parent = nullptr);
 
-    void imageChanged(QPixmap image, QString filename) override;
-
+    void set_chipset(QString name);
+    void force_chipset(QPixmap chipset);
+    void draw_overview(RpgPainter::TileOverviewMode mode);
+    QPixmap& share_chipset();
 private:
-	QGraphicsPixmapItem* m_pixmap = nullptr;
+    QPixmap m_chipset;
+    QGraphicsPixmapItem item;
 };

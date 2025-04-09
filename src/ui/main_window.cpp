@@ -43,6 +43,7 @@
 #include <lcf/inireader.h>
 #include <lcf/rpg/map.h>
 #include <lcf/rpg/mapinfo.h>
+#include <ui/picker/picker_audio_widget.h>
 #include "model/project.h"
 
 Q_DECLARE_METATYPE(QList<int>)
@@ -123,6 +124,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	dlg_resource = new ResourceManagerDialog(this);
 	dlg_resource->setModal(true);
 	dlg_db = nullptr;
+    jukebox = nullptr;
+    // Initialize palette
 	m_paletteScene = new PaletteScene(ui->graphicsPalette);
 	ui->graphicsPalette->setScene(m_paletteScene);
 	ui->graphicsPalette->verticalScrollBar()->setSliderPosition(1);
@@ -466,7 +469,6 @@ bool MainWindow::convertXYZtoPNG(QFile &xyz_file, QString out_path)
 void MainWindow::on_actionQuit_triggered()
 {
 	if (saveAll()) {
-		//this->on_actionJukebox_triggered(true);
 		qApp->quit();
 	}
 }
@@ -507,6 +509,7 @@ void MainWindow::update_actions()
 
 	ui->actionDrawCircle->setEnabled(has_project);
 	ui->actionGameDiskCreate->setEnabled(has_project);
+    ui->actionJukebox->setEnabled(has_project);
 	ui->actionDatabase->setEnabled(has_project);
 	ui->actionDrawPen->setEnabled(has_project);
 	ui->actionDrawFill->setEnabled(has_project);
@@ -806,18 +809,13 @@ void MainWindow::on_actionProjectOpen_triggered()
 
 void MainWindow::on_actionJukebox_triggered(bool disconnect)
 {
-	  static MusicPlayer player;
-	if (disconnect)
-	{
-		player.disconnect();
-	   player.deleteLater();
-	   player.close();
-	}
-	else
-	{
-		player.resize(300, 60);
-		player.show();
-	}
+    if (jukebox == nullptr) {
+        lcf::rpg::Music empty;
+        jukebox = new PickerDialog(core().project()->projectData(), FileFinder::FileType::Music, new PickerAudioWidget(empty, nullptr));
+        jukebox->makePreview();
+        jukebox->setDirectory(MUSIC);
+    }
+    jukebox->show();
 }
 
 void MainWindow::on_actionLayerLower_triggered()

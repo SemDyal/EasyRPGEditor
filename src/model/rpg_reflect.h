@@ -32,7 +32,6 @@
 #include "battleranimation.h"
 #include "switch.h"
 #include "variable.h"
-#include "project_data.h"
 
 Q_DECLARE_METATYPE(lcf::rpg::Actor*)
 Q_DECLARE_METATYPE(lcf::rpg::Skill*)
@@ -59,7 +58,7 @@ class TerrainWidget;
 class AttributeWidget;
 class StateWidget;
 class BattleAnimationWidget;
-class ChipSetWidget;
+class ChipsetWidget;
 class ClassWidget;
 class BattleAnimation2Widget;
 class CommonEventWidget;
@@ -171,7 +170,7 @@ public:
 template<>
 class RpgReflect<lcf::rpg::Chipset> {
 public:
-    using widget_type = ChipSetWidget;
+    using widget_type = ChipsetWidget;
 	using model_type = ChipsetModel;
 
 	static std::vector<lcf::rpg::Chipset>& items(lcf::rpg::Database& database) {

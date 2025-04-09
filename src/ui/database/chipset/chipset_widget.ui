@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ChipSetWidget</class>
- <widget class="QWidget" name="ChipSetWidget">
+ <class>ChipsetWidget</class>
+ <widget class="QWidget" name="ChipsetWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QWidget" name="widget" native="true">
+    <widget class="QWidget" name="topHorizontalWidget" native="true">
      <layout class="QHBoxLayout" name="stringDataLayout">
       <property name="leftMargin">
        <number>1</number>
@@ -77,7 +77,7 @@
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QWidget" name="widget" native="true">
+        <widget class="QWidget" name="lowerSidebarWidget" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -334,6 +334,9 @@
            <height>16777215</height>
           </size>
          </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
          <property name="verticalScrollBarPolicy">
           <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
          </property>
@@ -365,7 +368,7 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_8">
           <item>
-           <widget class="QListView" name="listView"/>
+           <widget class="QListView" name="terrainListView"/>
           </item>
          </layout>
         </widget>
@@ -378,7 +381,7 @@
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QWidget" name="verticalWidget" native="true">
+        <widget class="QWidget" name="upperSidebarWidget" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -515,6 +518,9 @@
            <width>220</width>
            <height>16777215</height>
           </size>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
          </property>
          <property name="verticalScrollBarPolicy">
           <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>

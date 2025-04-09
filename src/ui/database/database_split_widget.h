@@ -33,7 +33,7 @@
 #include "attribute_widget.h"
 #include "battle_animation2_widget.h"
 #include "battle_animation_widget.h"
-#include "chipset_widget.h"
+#include "chipset/chipset_widget.h"
 #include "class_widget.h"
 #include "common_event_widget.h"
 #include "enemy_group_widget.h"

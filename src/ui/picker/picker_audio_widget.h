@@ -17,7 +17,9 @@
 
 #pragma once
 
+#include <QAudioOutput>
 #include <QWidget>
+#include <qmediaplayer.h>
 
 #include "picker_child_widget.h"
 
@@ -39,11 +41,12 @@ public:
 		Sound
 	};
 
-	explicit PickerAudioWidget(const lcf::rpg::Music& music, QWidget *parent = nullptr);
-	explicit PickerAudioWidget(const lcf::rpg::Sound& sound, QWidget *parent = nullptr);
-	~PickerAudioWidget();
+    explicit PickerAudioWidget(const lcf::rpg::Music& music, QWidget *parent = nullptr);
+    explicit PickerAudioWidget(const lcf::rpg::Sound& sound, QWidget *parent = nullptr);
+    ~PickerAudioWidget();
 
-	void fileChanged(const QString&) override;
+    void fileChanged(const QString&) override;
+    void fileDoubleClicked(const QString&) override;
 
 	int fadeInTime() const;
 	int volume() const;
@@ -51,14 +54,19 @@ public:
 	int balance() const;
 
 private:
-	Ui::PickerAudioWidget *ui;
+    Ui::PickerAudioWidget *ui;
 
 	Type m_type;
-	QString m_filename;
+    QString m_filename;
+
+    QMediaPlayer m_player;
+    QAudioOutput m_audio;
 
 private slots:
 	void on_sliderFadeIn_valueChanged(int value);
 	void on_sliderVolume_valueChanged(int value);
 	void on_sliderTempo_valueChanged(int value);
 	void on_sliderBalance_valueChanged(int value);
+    void on_playPushButton_clicked();
+    void on_stopPushButton_clicked();
 };
