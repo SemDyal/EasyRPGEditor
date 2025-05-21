@@ -36,9 +36,7 @@ EventCommandsWidget::EventCommandsWidget(QWidget* parent) :
     setStyleSheet("QTreeView::item {margin: 0px; padding: 0px;}");
     setAlternatingRowColors(true);
 
-    QFontDatabase::addApplicationFont(":/fonts/fonts/SourceCodePro-Regular.ttf");
-    QFont monospace("Source Code Pro", 10, QFont::Monospace);
-    setFont(monospace);
+    setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 
     setContextMenuPolicy(Qt::CustomContextMenu);
 

@@ -231,8 +231,7 @@ set(EDITOR_SOURCES
 	src/ui/database/system_widget.cpp
 	src/ui/database/system_widget.h
 	src/ui/database/system_widget.ui
-        src/ui/database/tabwidget.cpp
-        src/ui/database/tabwidget.h
+	src/ui/database/vertical_tab_bar.h
 	src/ui/database/terrain_widget.cpp
 	src/ui/database/terrain_widget.h
 	src/ui/database/terrain_widget.ui
@@ -323,6 +322,7 @@ set(EDITOR_SOURCES
 	src/ui/viewer/rpg_graphics_view.h
 	src/ui/viewer/stat_curve_graphics_item.cpp
 	src/ui/viewer/stat_curve_graphics_item.h
+	src/ui/database/chipset/chipset_edit_mode.h
 )
 
 if(APPLE)
@@ -343,8 +343,7 @@ if(APPLE)
 else()
 	# Executable
 	set(EXE_NAME ${PROJECT_NAME})
-        add_executable(${EXE_NAME} WIN32 "src/main.cpp" ${EDITOR_SOURCES}
-            src/ui/database/chipset/chipset_edit_mode.h)
+        add_executable(${EXE_NAME} WIN32 "src/main.cpp" ${EDITOR_SOURCES})
 	if(WIN32)
 		# Open console for Debug builds
 		if(CMAKE_BUILD_TYPE MATCHES "Debug")
